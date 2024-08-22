@@ -1,11 +1,38 @@
 // Import necessary modules
 const express = require('express');
-const dotenv = require('dotenv');
-const { Sequelize, DataTypes } = require('sequelize');
+const sequelize = require('./config/database');
 const cors = require('cors');
 
-// Load environment variables from .env file
-dotenv.config();
+// Import models
+const Teacher = require('./models/teacher');
+const Student = require('./models/student');
+const Course = require('./models/course');
+const Attendance = require('./models/attendance');
+const Enrollment = require('./models/enrollment');
+const Assignment = require('./models/assignment');
+const Exam = require('./models/exam');
+const AssignmentSubmission = require('./models/assignmentSubmission');
+const ExamSubmission = require('./models/examSubmission');
+
+// Set up associations
+Teacher.hasMany(Course, { foreignKey: 'teacherId' });
+Course.belongsTo(Teacher, { foreignKey: 'teacherId' });
+
+Student.belongsToMany(Course, { through: Enrollment });
+Course.belongsToMany(Student, { through: Enrollment });
+
+Course.hasMany(Assignment, { foreignKey: 'courseId' });
+Course.hasMany(Exam, { foreignKey: 'courseId' });
+
+Assignment.hasMany(AssignmentSubmission, { foreignKey: 'assignmentId' });
+Student.hasMany(AssignmentSubmission, { foreignKey: 'studentId' });
+
+Exam.hasMany(ExamSubmission, { foreignKey: 'examId' });
+Student.hasMany(ExamSubmission, { foreignKey: 'studentId' });
+
+Student.hasMany(Attendance, { foreignKey: 'studentId' });
+Course.hasMany(Attendance, { foreignKey: 'courseId' });
+
 
 // Initialize Express app
 const app = express();
@@ -15,57 +42,22 @@ const PORT = process.env.PORT || 3000;
 // Middleware to parse JSON
 app.use(express.json());
 app.use(cors());
-// Initialize Sequelize with PostgreSQL connection
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-    host: process.env.DB_HOST,
-    dialect: 'postgres',
-    port: process.env.DB_PORT,
-});
 
-// Authenticate the connection to the database
-sequelize.authenticate()
-    .then(() => {
-        console.log('Connection to the database has been established successfully.');
-    })
-    .catch(err => {
-        console.error('Unable to connect to the database:', err);
-    });
-
-// Define the Teacher model
-const Teacher = sequelize.define('Teacher', {
-    firstName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    lastName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-});
 
 // Sync the model with the database (creating the table if it doesn't exist)
-sequelize.sync()
+sequelize.sync({force: true})
     .then(() => {
-        console.log('Teacher table has been created.');
+        console.log('Database & tables created!');
     })
     .catch(err => {
-        console.error('Error creating table:', err);
+        console.error('Error syncing database:', err);
     });
 
 // API route to create a new teacher
 app.post('/api/teachers', async (req, res) => {
     try {
-        const { firstName, lastName, email, password } = req.body;
-        const newTeacher = await Teacher.create({ firstName, lastName, email, password });
+        const { firstName, lastName, email, password, phoneNumber } = req.body;
+        const newTeacher = await Teacher.create({ firstName, lastName, email, password, phoneNumber });
         res.json(newTeacher);
     } catch (error) {
         res.status(500).send('Error creating teacher: ' + error.message);

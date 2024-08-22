@@ -15,6 +15,11 @@ const Teacher = sequelize.define('Teacher', {
         allowNull: false,
         unique: true,
     },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+    },
     phoneNumber: {
         type: DataTypes.STRING,
         allowNull: false,
