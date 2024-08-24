@@ -26,8 +26,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const result = await response.json();
             if (response.ok) {
+                localStorage.setItem('studentId',result.id)
                 alert('Student added successfully!');
-                window.location.href = 'students.html'; // Redirect back to the student management page
+                window.location.href = 'addStudentToCourse.html'; // Redirect back to the student management page
             } else {
                 alert('Failed to add student: ' + result.message);
             }

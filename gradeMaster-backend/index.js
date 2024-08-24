@@ -187,6 +187,25 @@ app.post('/api/students', async (req, res) => {
     }
 });
 
+
+app.post('/api/attendance', async (req, res) => {
+    try {
+        const { studentId, courseId, status, date } = req.body;
+
+        const attendance = await Attendance.create({
+            studentId,
+            courseId,
+            status,
+            date
+        });
+
+        res.status(201).json(attendance);
+    } catch (error) {
+        console.error('Error creating attendance:', error);
+        res.status(500).json({ message: 'Error creating attendance: ' + error.message });
+    }
+});
+
 // API route to get all courses of a teacher
 app.get('/api/teacher/:teacherId/courses', async (req,res)=> {
     try {
@@ -254,6 +273,16 @@ app.get('/api/students', async (req, res) => {
     try {
         const students = await Student.findAll();
         res.json(students);
+    } catch (error) {
+        res.status(500).send('Error fetching exams: ' + error.message);
+    }
+});
+
+// API route to get all exams
+app.get('/api/attendance', async (req, res) => {
+    try {
+        const attendances = await Attendance.findAll();
+        res.json(attendances);
     } catch (error) {
         res.status(500).send('Error fetching exams: ' + error.message);
     }
