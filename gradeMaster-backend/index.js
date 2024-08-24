@@ -166,7 +166,24 @@ app.post('/api/examAssinmemnt', async (req, res) => {
 
 
 
+// API route to get all courses of a teacher
+app.get('/api/teacher/:teacherId/courses', async (req,res)=> {
+    try {
+        const {teacherId} = req.params;
 
+        // Fetch the courses for the given teacherId
+        const courses = await Course.findAll({ where: { teacherId } });
+
+        if (!courses || courses.length === 0) {
+            return res.status(404).json({ message: 'No courses found for this teacher.' });
+        }
+
+        res.json(courses);
+    } catch (error) {
+        console.error('Error fetching courses:', error);
+        res.status(500).json({ message: 'Error fetching courses: ' + error.message });
+    }
+})
 
 
 // API route to get all teachers
