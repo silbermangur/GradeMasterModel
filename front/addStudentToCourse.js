@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         try {
             for (const courseId of selectedCourses) {
-                await fetch('http://localhost:3000/api/attendance', {
+                await fetch('http://localhost:3000/api/enrollment', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -57,13 +57,14 @@ document.addEventListener('DOMContentLoaded', async function() {
                     body: JSON.stringify({
                         studentId,
                         courseId,
-                        status: 'T', 
-                        date: new Date().toISOString().split('T')[0]  // Use the current date
+                        enrollmentDate: new Date().toISOString().split('T')[0],  // Use the current date
+                        finalGrade: 0.0, 
+                        
                     })
                 });
             }
 
-            alert('Student successfully assigned to courses!');
+            alert('Student successfully enrollment to courses!');
             window.location.href = 'students.html'; // Redirect back to the student management page
         } catch (error) {
             console.error('Error assigning student to courses:', error);

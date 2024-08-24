@@ -21,9 +21,6 @@ const ExamSubmission = require('./models/examSubmission');
 Teacher.hasMany(Course, { foreignKey: 'teacherId' });
 Course.belongsTo(Teacher, { foreignKey: 'teacherId' });
 
-Student.belongsToMany(Course, { through: Enrollment });
-Course.belongsToMany(Student, { through: Enrollment });
-
 Course.hasMany(Assignment, { foreignKey: 'courseId' });
 Course.hasMany(Exam, { foreignKey: 'courseId' });
 
@@ -37,6 +34,11 @@ Student.hasMany(Attendance, { foreignKey: 'studentId' });
 Course.hasMany(Attendance, { foreignKey: 'courseId' });
 
 
+Student.hasMany(Enrollment, { foreignKey: 'studentId' });
+Course.hasMany(Enrollment, { foreignKey: 'courseId' });
+Enrollment.belongsTo(Student, { foreignKey: 'studentId' });
+Enrollment.belongsTo(Course, { foreignKey: 'courseId' });
+
 // Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -49,7 +51,7 @@ app.use(cors());
 
 // Sync the model with the database (creating the table if it doesn't exist)
 // { force: true }
-sequelize.sync()
+sequelize.sync({ force: true })
     .then(() => {
         console.log('Database & tables created!');
     })
@@ -188,21 +190,21 @@ app.post('/api/students', async (req, res) => {
 });
 
 
-app.post('/api/attendance', async (req, res) => {
+app.post('/api/enrollment', async (req, res) => {
     try {
-        const { studentId, courseId, status, date } = req.body;
+        const { studentId, courseId, enrollmentDate, finalGrade } = req.body;
 
-        const attendance = await Attendance.create({
+        const enrollment = await Enrollment.create({
             studentId,
             courseId,
-            status,
-            date
+            enrollmentDate,
+            finalGrade,
         });
-
-        res.status(201).json(attendance);
+        
+        res.status(201).json(enrollment);
     } catch (error) {
-        console.error('Error creating attendance:', error);
-        res.status(500).json({ message: 'Error creating attendance: ' + error.message });
+        console.error('Error creating enrollment:', error);
+        res.status(500).json({ message: 'Error creating enrollment: ' + error.message });
     }
 });
 
@@ -283,6 +285,16 @@ app.get('/api/attendance', async (req, res) => {
     try {
         const attendances = await Attendance.findAll();
         res.json(attendances);
+    } catch (error) {
+        res.status(500).send('Error fetching exams: ' + error.message);
+    }
+});
+
+// API route to get all exams
+app.get('/api/enrollment', async (req, res) => {
+    try {
+        const enrollment = await Enrollment.findAll();
+        res.json(enrollment);
     } catch (error) {
         res.status(500).send('Error fetching exams: ' + error.message);
     }
