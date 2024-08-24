@@ -7,6 +7,7 @@ document.getElementById('registrationForm').addEventListener('submit', async (e)
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
     const phoneNumber = document.getElementById('phoneNumber').value;
+    
     // Create data object
     const data = {
         firstName,
@@ -25,6 +26,7 @@ document.getElementById('registrationForm').addEventListener('submit', async (e)
             },
             body: JSON.stringify(data)
         });
+        
 
         if (response.ok) {
             alert('Teacher registered successfully!');

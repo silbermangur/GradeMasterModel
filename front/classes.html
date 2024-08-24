@@ -34,12 +34,51 @@
     </nav>
     
     <div class="container">
-        <h2 class="text-center mt-5">הגדרת כיתה חדשה</h2>
-        <form>
+        <h2 class="text-center mt-5">create new course  </h2>
+        <form id="classform">
+             <h3>Input for creating a class</h3>
             <div class="form-group">
-                <label for="className">שם הכיתה</label>
-                <input type="text" class="form-control" id="className" placeholder="הכנס שם כיתה">
+                <label for="className">class name</label>
+                <input type="text" class="form-control" id="className" placeholder="enter your class name">
+
+                <label for="classCode">class Code</label>
+                <input type="text" class="form-control" id="classCode" placeholder="enter your class code">
+
+                <label for="classCredit">class credits</label>
+                <input type="number" class="form-control" id="classCredit" placeholder="enter your class credits">
+
+                <label for="AttendanceWeight">class AttendanceWeight</label>
+                <input type="number" class="form-control" id="attendanceWeight" required min="0" max="1" step=".01" placeholder="enter your class AttendanceWeight">
+            <button type="submit" class="btn btn-success btn-block">Save the class only</button>
             </div>
+        <!--
+            <h3>Input for create a Assignment</h3>
+            <div class="form-group">
+                <label for="numAssignments">Number of Assignments</label>
+                <input type="number" class="form-control" id="numAssignments" min="1" placeholder="Enter number of assignments">
+                <button type="button" class="btn btn-info mt-2" id="generateAssignmentsBtn">Generate Assignment Fields</button>
+            </div>
+            <div id="assignmentsContainer"></div>
+           
+            <h3> Input for create an Exam </h3>
+            <div class="form-group">
+                <label for="examName">examName</label>
+                <input type="text" class="form-control" id="examName" placeholder="enter examName">
+
+                <label for="examDescription">examDescription</label>
+                <input type="text" class="form-control" id="examDescription" placeholder="enter examDescription">
+
+                <label for="examDate">examDate</label>
+                <input type="datetime-local" class="form-control" id="examDate" placeholder="enter examDate">
+
+                <label for="examWeight">examWeight</label>
+                <input type="number" class="form-control" id="examWeight" required min="0" max="1" step=".01" placeholder="enter wight for exam (%)">
+            </div>
+            <button type="submit" class="btn btn-success btn-block">Save the class</button> 
+        -->
+        </form>
+        <!--
+            <h3>Input to create a studnet for the class</h3>
             <div class="form-group">
                 <label>הוספת סטודנטים</label>
                 <div id="studentsList">
@@ -51,35 +90,13 @@
                 </div>
                 <button type="button" class="btn btn-info" id="addStudentBtn">הוסף סטודנט</button>
             </div>
-            <div class="form-group">
-                <label for="assignmentWeight">משקל מטלות</label>
-                <input type="number" class="form-control" id="assignmentWeight" placeholder="הכנס משקל מטלות (%)">
-            </div>
-            <div class="form-group">
-                <label for="examWeight">משקל בחינות</label>
-                <input type="number" class="form-control" id="examWeight" placeholder="הכנס משקל בחינות (%)">
-            </div>
-            <div class="form-group">
-                <label for="attendanceWeight">משקל נוכחות</label>
-                <input type="number" class="form-control" id="attendanceWeight" placeholder="הכנס משקל נוכחות (%)">
-            </div>
+
             <button type="submit" class="btn btn-success btn-block">שמור כיתה</button>
         </form>
+        -->
     </div>
-
+    <script src="classes.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('addStudentBtn').addEventListener('click', function() {
-            const studentEntry = document.createElement('div');
-            studentEntry.className = 'student-entry mb-3';
-            studentEntry.innerHTML = `
-                <input type="text" class="form-control mb-2" placeholder="שם פרטי">
-                <input type="text" class="form-control mb-2" placeholder="שם משפחה">
-                <input type="text" class="form-control mb-2" placeholder="תעודת זהות">
-            `;
-            document.getElementById('studentsList').appendChild(studentEntry);
-        });
-    </script>
 </body>
 </html>

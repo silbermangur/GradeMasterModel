@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             teachers.forEach(teacher => {
                 const listItem = document.createElement('li');
                 listItem.className = 'list-group-item';
-                listItem.textContent = `${teacher.firstName} ${teacher.lastName} - ${teacher.email}`;
+                listItem.textContent = `${teacher.firstName} ${teacher.lastName} - ${teacher.email} - ${teacher.password} - ${teacher.phoneNumber}`;
                 teacherList.appendChild(listItem);
             });
         } else {
