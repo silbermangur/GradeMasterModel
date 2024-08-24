@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הוסף סטודנט חדש - GradeMaster</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body dir="rtl">
+    <div class="container">
+        <h2 class="text-center mt-5">הוסף סטודנט חדש</h2>
+        <form id="addStudentForm">
+            <div class="form-group">
+                <label for="firstName">שם פרטי</label>
+                <input type="text" class="form-control" id="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">שם משפחה</label>
+                <input type="text" class="form-control" id="lastName" required>
+            </div>
+            <div class="form-group">
+                <label for="dateOfBirth">תאריך לידה</label>
+                <input type="date" class="form-control" id="dateOfBirth" required>
+            </div>
+            <div class="form-group">
+                <label for="gender">מין</label>
+                <select class="form-control" id="gender" required>
+                    <option value="Male">זכר</option>
+                    <option value="Female">נקבה</option>
+                    <option value="Other">אחר</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="phoneNumber">מספר טלפון</label>
+                <input type="text" class="form-control" id="phoneNumber" required>
+            </div>
+            <div class="form-group">
+                <label for="address">כתובת</label>
+                <input type="text" class="form-control" id="address" required>
+            </div>
+            <div class="form-group">
+                <label for="email">דוא"ל</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="enrollmentDate">תאריך רישום</label>
+                <input type="date" class="form-control" id="enrollmentDate" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mt-4">הוסף סטודנט</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="addStudent.js"></script> <!-- Link to the external JS file -->
+</body>
+</html>

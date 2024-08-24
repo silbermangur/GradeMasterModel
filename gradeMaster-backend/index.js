@@ -164,7 +164,28 @@ app.post('/api/examAssinmemnt', async (req, res) => {
 });
 
 
+app.post('/api/students', async (req, res) => {
+    try {
+        const { firstName, lastName, dateOfBirth, gender, phoneNumber, address, email, enrollmentDate } = req.body;
 
+        // Create a new student
+        const newStudent = await Student.create({
+            firstName,
+            lastName,
+            dateOfBirth,
+            gender,
+            phoneNumber,
+            address,
+            email,
+            enrollmentDate
+        });
+
+        res.status(201).json(newStudent);
+    } catch (error) {
+        console.error('Error creating student:', error);
+        res.status(500).json({ message: 'Error creating student: ' + error.message });
+    }
+});
 
 // API route to get all courses of a teacher
 app.get('/api/teacher/:teacherId/courses', async (req,res)=> {
@@ -228,6 +249,15 @@ app.get('/api/exams', async (req, res) => {
 });
 
 
+// API route to get all exams
+app.get('/api/students', async (req, res) => {
+    try {
+        const students = await Student.findAll();
+        res.json(students);
+    } catch (error) {
+        res.status(500).send('Error fetching exams: ' + error.message);
+    }
+});
 
 // Default route to check if the server is running
 app.get('/', (req, res) => {

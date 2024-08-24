@@ -1,7 +1,6 @@
 document.getElementById('loginform').addEventListener('submit',  async (e) => {
     e.preventDefault();
 
-
      // Get form data
      const email = document.getElementById("email").value;
      const password = document.getElementById("password").value;
@@ -11,7 +10,6 @@ document.getElementById('loginform').addEventListener('submit',  async (e) => {
         email,
         password
     }
-
 
     try {
 

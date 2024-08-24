@@ -2,6 +2,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Get the teacherId from localStorage
     const teacherId = localStorage.getItem('teacherId');
 
+    // Handle "Add New Student" button click
+    const addStudentBtn = document.getElementById('addStudentBtn');
+    if (addStudentBtn) {
+        addStudentBtn.addEventListener('click', function() {
+            window.location.href = 'addStudent.html';
+        });
+    }
+
     if (!teacherId) {
         alert('Teacher ID not found in local storage.');
         return;

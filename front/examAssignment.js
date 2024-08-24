@@ -81,6 +81,12 @@ document.getElementById("classform").addEventListener('submit', async(e)=> {
         });
         const result = await response.json();
         if (response.ok) {
+            // Store the teacherId in local storage
+            localStorage.removeItem('courseId')
+             
+            // You can redirect the user to the dashboard or another page after login
+            window.location.href = 'Home.html';
+
             alert('exam, and assignments created successfully!');
         } else {
             alert(result.message || 'Failed to create course.');
