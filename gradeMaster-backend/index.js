@@ -68,15 +68,7 @@ app.post('/api/teachers', async (req, res) => {
     }
 });
 
-// API route to get all teachers
-app.get('/api/teachers', async (req, res) => {
-    try {
-        const teachers = await Teacher.findAll();
-        res.json(teachers);
-    } catch (error) {
-        res.status(500).send('Error fetching teachers: ' + error.message);
-    }
-});
+
 
 // API route to get a spacific user
 // Login endpoint
@@ -111,26 +103,7 @@ app.post('/api/classes', async (req, res) => {
             teacherId,
         } = req.body;
 
-        /*
-        // Validate the total weight
-        const totalWeight = parseFloat(attendanceWeight) + parseFloat(exam.examWeight) + assignments.reduce((acc, assignment) => acc + parseFloat(assignment.assignmentWeight), 0);
-        if (totalWeight !== 1) {
-            return res.status(400).json({ message: 'Total weight of assignments, exam, and attendance must equal 1.' });
-        }
-        */
-        /*
-           // Ensure the teacher exists
-           const teacher = await Teacher.findByPk(Number(teacherId));
-           if (!teacher) {
-               return res.status(404).json({ message: 'Teacher not found' });
-           }
-        */
-        /*
-        let numberclassCredit = Number(classCredit);
-        let numberTeacherId = Number(teacherId);
-        */
         // Create the course
-
         const course = await Course.create({
             courseName: className,
             courseCode: classCode,
@@ -139,30 +112,70 @@ app.post('/api/classes', async (req, res) => {
             teacherId : teacherId  // Associate course with the teacher,
         });
 
-        /*
+        res.status(201).json({ message: 'Course, exam, and assignments created successfully!', course });
+    } catch (error) {
+        res.status(500).json({ message: 'Error creating course: ' + error.message });
+    }
+});
+
+
+// API route to create a new course with associated exams and assignments
+app.post('/api/examAssinmemnt', async (req, res) => {
+    try {
+        const { 
+            exam,
+            assignments,
+            CourseId,
+        } = req.body;
+
+        
+        const course = await Course.findByPk(CourseId)
+
+        // Validate the total weight
+        const totalWeight = parseFloat(course.attendanceWeight) + parseFloat(exam.examWeight) + assignments.reduce((acc, assignment) => acc + parseFloat(assignment.assignmentWeight), 0);
+        if (totalWeight !== 1) {
+            return res.status(400).json({ message: 'Total weight of assignments, exam, and attendance must equal 1.' });
+        }
+        
         // Create the exam associated with the course
         const newExam = await Exam.create({
             examName: exam.examName,
-            examDescription: exam.examDescription,
+            description: exam.examDescription,
             examDate: exam.examDate,
-            examWeight: exam.examWeight,
-            courseId: course.id, // Associate exam with the course
+            examWight: exam.examWeight,
+            courseId: CourseId, // Associate exam with the course
         });
 
         // Create assignments associated with the course
         for (const assignment of assignments) {
             await Assignment.create({
                 assignmentName: assignment.assignmentName,
-                assignmentDescription: assignment.assignmentDescription,
-                assignmentDate: assignment.assignmentDate,
-                assignmentWeight: assignment.assignmentWeight,
-                courseId: course.id, // Associate assignment with the course
+                description: assignment.assignmentDescription,
+                dueDate: assignment.assignmentDate,
+                assignmentWight: assignment.assignmentWeight,
+                courseId: CourseId, // Associate assignment with the course
             });
         }
-        */
+        
         res.status(201).json({ message: 'Course, exam, and assignments created successfully!' });
     } catch (error) {
         res.status(500).json({ message: 'Error creating course: ' + error.message });
+    }
+});
+
+
+
+
+
+
+
+// API route to get all teachers
+app.get('/api/teachers', async (req, res) => {
+    try {
+        const teachers = await Teacher.findAll();
+        res.json(teachers);
+    } catch (error) {
+        res.status(500).send('Error fetching teachers: ' + error.message);
     }
 });
 
