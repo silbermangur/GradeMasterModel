@@ -49,14 +49,26 @@ app.use(cors());
 // Import routes
 const teacherRoutes = require('./routes/teachers');
 const studentRoutes = require('./routes/students');
+const courseRoutes = require('./routes/courses');
+const attendanceRoutes = require('./routes/attendance');
+// const enrollmentRoutes = require('./routes/enrollment');
+// const assignmentRoutes = require('./routes/assignments');
+// const examRoutes = require('./routes/exams');
+// const submissionRoutes = require('./routes/submission');
 
 // Use routes
 app.use('/api/teachers', teacherRoutes);
 app.use('/api/students', studentRoutes);
+app.use('/api/courses', courseRoutes);
+app.use('/api/attendance', attendanceRoutes);
+// app.use('/api/enrollment', enrollmentRoutes);
+// app.use('/api/assignments', assignmentRoutes);
+// app.use('/api/exams', examRoutes);
+// app.use('/api/submissions', submissionRoutes);
 
 // Sync the model with the database (creating the table if it doesn't exist)
 // {force: true}
-sequelize.sync({force: true})
+sequelize.sync({force: true} )
     .then(() => {
         console.log('Database & tables created!');
     })
@@ -75,31 +87,8 @@ app.post('/api/teachers', async (req, res) => {
         res.status(500).send('Error creating teacher: ' + error.message);
     }
 });
-
 */
-
-// API route to get a spacific user
-// Login endpoint
-app.post('/api/login', async (req, res) => {
-    try {
-        const { email } = req.body;
-
-        // Find the teacher by email and password
-        const teacher = await Teacher.findOne({ where: { email } });
-
-        if (!teacher) {
-            return res.status(404).json({ message: 'Invalid email or password' });
-        }
-
-        // Login successful
-        res.json({ message: 'Login successful', teacher });
-
-    } catch (error) {
-        res.status(500).json({ message: 'Error logging in: ' + error.message });
-    }
-});
-
-
+/*
 // API route to create a new course with associated exams and assignments
 app.post('/api/classes', async (req, res) => {
     try {
@@ -125,7 +114,7 @@ app.post('/api/classes', async (req, res) => {
         res.status(500).json({ message: 'Error creating course: ' + error.message });
     }
 });
-
+*/
 
 // API route to create a new course with associated exams and assignments
 app.post('/api/examAssinmemnt', async (req, res) => {
@@ -213,9 +202,9 @@ app.post('/api/enrollment', async (req, res) => {
         res.status(500).json({ message: 'Error creating enrollment: ' + error.message });
     }
 });
-
+/*
 app.put('/api/attendance', async (req, res) => {
-    const { studentId, courseId, date, status } = req.body;
+    const { studentId, courseId, status } = req.body;
     try {
         // Find the existing attendance record
         const attendance = await Attendance.findOne({
@@ -235,7 +224,7 @@ app.put('/api/attendance', async (req, res) => {
         res.status(500).json({ message: 'Error updating attendance: ' + error.message });
     }
 });
-
+*/
 
 // API route to get all courses of a teacher
 app.get('/api/teacher/:teacherId/courses', async (req,res)=> {
@@ -375,7 +364,7 @@ app.get('/api/courses/:courseId/attendance', async (req, res) => {
 });
 
 
-
+/*
 app.post('/api/attendance', async (req, res) => {
     const { studentId, courseId, date, status } = req.body;
     try {
@@ -395,6 +384,7 @@ app.post('/api/attendance', async (req, res) => {
         res.status(500).json({ message: 'Error updating attendance: ' + error.message });
     }
 });
+*/
 
 app.post('/api/assignment-submissions', async (req, res) => {
     const { assignmentId, studentId, pointsEarned } = req.body;
@@ -552,14 +542,14 @@ app.get('/api/teachers', async (req, res) => {
 });
 */
 // API route to get all courses
-app.get('/api/courses', async (req, res) => {
-    try {
-        const courses = await Course.findAll();
-        res.json(courses);
-    } catch (error) {
-        res.status(500).send('Error fetching courses: ' + error.message);
-    }
-});
+// app.get('/api/courses', async (req, res) => {
+//     try {
+//         const courses = await Course.findAll();
+//         res.json(courses);
+//     } catch (error) {
+//         res.status(500).send('Error fetching courses: ' + error.message);
+//     }
+// });
 
 // API route to get all assignments
 app.get('/api/assignments', async (req, res) => {
@@ -593,15 +583,15 @@ app.get('/api/students', async (req, res) => {
     }
 });
 */
-// API route to get all exams
-app.get('/api/attendance', async (req, res) => {
-    try {
-        const attendances = await Attendance.findAll();
-        res.json(attendances);
-    } catch (error) {
-        res.status(500).send('Error fetching exams: ' + error.message);
-    }
-});
+// // API route to get all exams
+// app.get('/api/attendance', async (req, res) => {
+//     try {
+//         const attendances = await Attendance.findAll();
+//         res.json(attendances);
+//     } catch (error) {
+//         res.status(500).send('Error fetching exams: ' + error.message);
+//     }
+// });
 
 // API route to get all exams
 app.get('/api/enrollment', async (req, res) => {
@@ -632,6 +622,31 @@ app.get('/api/examSubmission', async (req, res) => {
         res.status(500).send('Error fetching exams: ' + error.message);
     }
 });
+
+
+
+
+// API route to get a spacific user
+// Login endpoint
+app.post('/api/login', async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        // Find the teacher by email and password
+        const teacher = await Teacher.findOne({ where: { email } });
+
+        if (!teacher) {
+            return res.status(404).json({ message: 'Invalid email or password' });
+        }
+
+        // Login successful
+        res.json({ message: 'Login successful', teacher });
+
+    } catch (error) {
+        res.status(500).json({ message: 'Error logging in: ' + error.message });
+    }
+});
+
 
 // Default route to check if the server is running
 app.get('/', (req, res) => {

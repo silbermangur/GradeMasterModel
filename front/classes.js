@@ -44,7 +44,7 @@ const courseData = {
 
 // Send course data to backend
      try {
-        const response = await fetch('http://localhost:3000/api/classes', {
+        const response = await fetch('http://localhost:3000/api/courses', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
