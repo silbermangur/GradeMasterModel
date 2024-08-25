@@ -51,7 +51,7 @@ app.use(cors());
 
 // Sync the model with the database (creating the table if it doesn't exist)
 // { force: true }
-sequelize.sync({ force: true })
+sequelize.sync()
     .then(() => {
         console.log('Database & tables created!');
     })
@@ -226,6 +226,30 @@ app.get('/api/teacher/:teacherId/courses', async (req,res)=> {
         res.status(500).json({ message: 'Error fetching courses: ' + error.message });
     }
 })
+
+app.get('/api/courses/:courseId/enrolled-students', async (req, res) => {
+    try {
+        const { courseId } = req.params;
+
+        // Fetch students enrolled in the course
+        const students = await Student.findAll({
+            include: [{
+                model: Enrollment,
+                where: { courseId }
+            }]
+        });
+
+        if (!students || students.length === 0) {
+            return res.status(404).json({ message: 'No students found for this course.' });
+        }
+
+        res.json(students);
+    } catch (error) {
+        console.error('Error fetching students:', error);
+        res.status(500).json({ message: 'Error fetching students: ' + error.message });
+    }
+});
+
 
 
 // API route to get all teachers
