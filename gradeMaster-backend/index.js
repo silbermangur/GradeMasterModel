@@ -3,9 +3,6 @@ const express = require('express');
 const sequelize = require('./config/database');
 const cors = require('cors');
 
-
-
-
 // Import models
 const Teacher = require('./models/teacher');
 const Student = require('./models/student');
@@ -50,8 +47,8 @@ app.use(cors());
 
 
 // Sync the model with the database (creating the table if it doesn't exist)
-// { force: true }
-sequelize.sync()
+// {force: true}
+sequelize.sync({force: true})
     .then(() => {
         console.log('Database & tables created!');
     })
@@ -208,6 +205,29 @@ app.post('/api/enrollment', async (req, res) => {
     }
 });
 
+app.put('/api/attendance', async (req, res) => {
+    const { studentId, courseId, date, status } = req.body;
+    try {
+        // Find the existing attendance record
+        const attendance = await Attendance.findOne({
+            where: { studentId, courseId }
+        });
+
+        if (attendance) {
+            // Update the status
+            attendance.status = status;
+            await attendance.save();
+            res.status(200).json(attendance);
+        } else {
+            res.status(404).json({ message: 'Attendance record not found' });
+        }
+    } catch (error) {
+        console.error('Error updating attendance:', error);
+        res.status(500).json({ message: 'Error updating attendance: ' + error.message });
+    }
+});
+
+
 // API route to get all courses of a teacher
 app.get('/api/teacher/:teacherId/courses', async (req,res)=> {
     try {
@@ -250,7 +270,93 @@ app.get('/api/courses/:courseId/enrolled-students', async (req, res) => {
     }
 });
 
+app.get('/api/courses/:courseId/attendance', async (req, res) => {
+    const { courseId } = req.params;
+    try {
+        const dates = await Attendance.findAll({
+            attributes: [[sequelize.fn('DISTINCT', sequelize.col('date')), 'date']],
+            where: { courseId },
+            order: [['date', 'ASC']]
+        });
 
+        const students = await Student.findAll({
+            include: {
+                model: Enrollment,
+                where: { courseId }
+            }
+        });
+
+        const attendanceData = students.map(student => {
+            const attendance = {};
+            dates.forEach(date => {
+                attendance[date.date] = 'N/A'; // Default value if no record exists
+            });
+            return { id: student.id, firstName: student.firstName, lastName: student.lastName, attendance };
+        });
+
+        for (const student of attendanceData) {
+            const records = await Attendance.findAll({
+                where: { studentId: student.id, courseId }
+            });
+            records.forEach(record => {
+                student.attendance[record.date] = record.status;
+            });
+        }
+
+        res.json({ students: attendanceData, dates: dates.map(d => d.date) });
+    } catch (error) {
+        console.error('Error fetching attendance data:', error);
+        res.status(500).json({ message: 'Error fetching attendance data: ' + error.message });
+    }
+});
+
+
+
+app.post('/api/attendance', async (req, res) => {
+    const { studentId, courseId, date, status } = req.body;
+    try {
+        const [attendance, created] = await Attendance.findOrCreate({
+            where: { studentId, courseId, date },
+            defaults: { status }
+        });
+
+        if (!created) {
+            attendance.status = status;
+            await attendance.save();
+        }
+
+        res.status(200).json(attendance);
+    } catch (error) {
+        console.error('Error updating attendance:', error);
+        res.status(500).json({ message: 'Error updating attendance: ' + error.message });
+    }
+});
+
+app.get('/api/courses/:courseId/students', async (req, res) => {
+    const { courseId } = req.params;
+    try {
+        const students = await Student.findAll({
+            include: {
+                model: Enrollment,
+                where: { courseId }
+            }
+        });
+
+        if (!students || students.length === 0) {
+            return res.status(404).json({ message: 'No students found for this course.' });
+        }
+
+        res.json(students);
+    } catch (error) {
+        console.error('Error fetching students:', error);
+        res.status(500).json({ message: 'Error fetching students: ' + error.message });
+    }
+});
+
+
+/////////////////////////////////////////////////
+//              Simplte Get methods!
+/////////////////////////////////////////////////
 
 // API route to get all teachers
 app.get('/api/teachers', async (req, res) => {
