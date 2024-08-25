@@ -46,6 +46,12 @@ app.use(express.json());
 app.use(cors());
 
 
+// Import routes
+const teacherRoutes = require('./routes/teachers');
+
+// Use routes
+app.use('/api/teachers', teacherRoutes);
+
 // Sync the model with the database (creating the table if it doesn't exist)
 // {force: true}
 sequelize.sync()
@@ -56,6 +62,7 @@ sequelize.sync()
         console.error('Error syncing database:', err);
     });
 
+    /*
 // API route to create a new teacher
 app.post('/api/teachers', async (req, res) => {
     try {
@@ -67,7 +74,7 @@ app.post('/api/teachers', async (req, res) => {
     }
 });
 
-
+*/
 
 // API route to get a spacific user
 // Login endpoint
@@ -463,7 +470,7 @@ app.get('/api/courses/:courseId/students', async (req, res) => {
 
 app.get('/api/courses/:courseId/students/:studentId/final-grade', async (req, res) => {
     const { courseId, studentId } = req.params;
-    // debugger
+
     try {
         // Fetch the student's assignments and exams for the course
         const assignments = await Assignment.findAll({ where: { courseId } });
@@ -472,18 +479,18 @@ app.get('/api/courses/:courseId/students/:studentId/final-grade', async (req, re
 
         let totalGrade = 0;
         let totalWeight = 0;
+
         // Calculate the weighted grades for assignments and exams
         for (const assignment of assignments) {
             const submission = await AssignmentSubmission.findOne({
                 where: { assignmentId: assignment.id, studentId }
             });
-            console.log("dsadas" +submission)
             if (submission) {
                 totalGrade += submission.pointsEarned * assignment.assignmentWight;
                 totalWeight += parseFloat(assignment.assignmentWight);
             }
         }
-        
+
         for (const exam of exams) {
             const submission = await ExamSubmission.findOne({
                 where: { examId: exam.id, studentId }
@@ -503,7 +510,19 @@ app.get('/api/courses/:courseId/students/:studentId/final-grade', async (req, re
 
         // Final grade is the sum of weighted grades and attendance contribution
         const finalGrade = totalGrade + attendanceContribution * 100;
-        
+
+        // Update the Enrollment table with the final grade
+        const enrollment = await Enrollment.findOne({
+            where: { studentId, courseId }
+        });
+
+        if (enrollment) {
+            enrollment.finalGrade = finalGrade.toFixed(2); // Round to 2 decimal places
+            await enrollment.save();
+        } else {
+            return res.status(404).json({ message: 'Enrollment record not found' });
+        }
+
         res.json({
             studentName: (await Student.findByPk(studentId)).firstName + ' ' + (await Student.findByPk(studentId)).lastName,
             finalGrade: finalGrade.toFixed(2) // Round to 2 decimal places
@@ -514,10 +533,12 @@ app.get('/api/courses/:courseId/students/:studentId/final-grade', async (req, re
     }
 });
 
+
 /////////////////////////////////////////////////
 //              Simplte Get methods!
 /////////////////////////////////////////////////
 
+/*
 // API route to get all teachers
 app.get('/api/teachers', async (req, res) => {
     try {
@@ -527,7 +548,7 @@ app.get('/api/teachers', async (req, res) => {
         res.status(500).send('Error fetching teachers: ' + error.message);
     }
 });
-
+*/
 // API route to get all courses
 app.get('/api/courses', async (req, res) => {
     try {

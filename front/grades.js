@@ -174,7 +174,7 @@ async function loadGrades(courseId, assignmentExamId, type) {
     }
 }
 
-// Function to calculate the final grade for a specific student
+// Function to calculate the final grade for a specific student and update it in the database
 async function calculateFinalGrade(studentId, courseId) {
     try {
         const response = await fetch(`http://localhost:3000/api/courses/${courseId}/students/${studentId}/final-grade`);
