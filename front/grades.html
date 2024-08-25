@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>הזנת ציונים - GradeMaster</title>
+    <title>ניהול ציונים - GradeMaster</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body dir="rtl">
@@ -29,46 +29,34 @@
                 <li class="nav-item">
                     <a class="nav-link" href="settings.html">הגדרות</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="attendance.html">נוכחות</a>
+                </li>
             </ul>
         </div>
     </nav>
-    
     <div class="container">
-        <h2 class="text-center mt-5">הזנת ציונים</h2>
-        <form>
-            <div class="form-group">
-                <label for="classSelect">בחר כיתה</label>
-                <select class="form-control" id="classSelect">
-                    <option value="class1">כיתה א'</option>
-                    <option value="class2">כיתה ב'</option>
-                    <option value="class3">כיתה ג'</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="assignmentSelect">בחר מטלה</label>
-                <select class="form-control" id="assignmentSelect">
-                    <option value="assignment1">מטלה 1</option>
-                    <option value="assignment2">מטלה 2</option>
-                    <option value="exam1">בחינה 1</option>
-                </select>
-            </div>
-            <div id="gradesList">
-                <h4>רשימת סטודנטים</h4>
-                <div class="student-entry mb-3">
-                    <span>סטודנט 1</span>
-                    <input type="number" class="form-control" placeholder="הכנס ציון">
-                </div>
-                <div class="student-entry mb-3">
-                    <span>סטודנט 2</span>
-                    <input type="number" class="form-control" placeholder="הכנס ציון">
-                </div>
-                <!-- ניתן להוסיף עוד סטודנטים בצורה דומה -->
-            </div>
-            <button type="submit" class="btn btn-success btn-block mt-4">שמור ציונים</button>
-        </form>
+        <h2 class="text-center mt-5">Grade Mangment </h2>
+        <div class="form-group">
+            <label for="classSelect">choose course</label>
+            <select class="form-control" id="classSelect">
+                <!-- Courses will be dynamically loaded here -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="assignmentSelect">choose assignment or exam</label>
+            <select class="form-control" id="assignmentSelect">
+                <!-- Assignments and exams will be dynamically loaded here -->
+            </select>
+        </div>
+        <div id="gradesTableContainer" class="mt-4">
+            <!-- Grades table will be dynamically generated here -->
+        </div>
+
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="grades.js"></script> <!-- Link to the grades.js script -->
 </body>
 </html>

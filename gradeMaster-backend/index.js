@@ -48,7 +48,7 @@ app.use(cors());
 
 // Sync the model with the database (creating the table if it doesn't exist)
 // {force: true}
-sequelize.sync({force: true})
+sequelize.sync()
     .then(() => {
         console.log('Database & tables created!');
     })
@@ -270,6 +270,61 @@ app.get('/api/courses/:courseId/enrolled-students', async (req, res) => {
     }
 });
 
+app.get('/api/courses/:courseId/assignments-exams', async (req, res) => {
+    const { courseId } = req.params;
+    try {
+        const assignments = await Assignment.findAll({ where: { courseId } });
+        const exams = await Exam.findAll({ where: { courseId } });
+
+        const assignmentsExams = [
+            ...assignments.map(a => ({ id: a.id, assignmentName: a.assignmentName, type: 'assignment' })),
+            ...exams.map(e => ({ id: e.id, examName: e.examName, type: 'exam' }))
+        ];
+
+        res.json(assignmentsExams);
+    } catch (error) {
+        console.error('Error fetching assignments and exams:', error);
+        res.status(500).json({ message: 'Error fetching assignments and exams: ' + error.message });
+    }
+});
+
+app.get('/api/courses/:courseId/grades', async (req, res) => {
+    const { courseId } = req.params;
+    const { assignmentExamId, type } = req.query;
+
+    try {
+        const students = await Student.findAll({
+            include: [
+                {
+                    model: Enrollment,
+                    where: { courseId }
+                },
+                {
+                    model: type === 'assignment' ? AssignmentSubmission : ExamSubmission,
+                    where: { [type === 'assignment' ? 'assignmentId' : 'examId']: assignmentExamId },
+                    required: false // Optional: includes students without grades
+                }
+            ]
+        });
+
+        const gradesData = students.map(student => ({
+            id: student.id,
+            firstName: student.firstName,
+            lastName: student.lastName,
+            grade: type === 'assignment'
+                ? student.AssignmentSubmissions.length > 0 ? student.AssignmentSubmissions[0].pointsEarned : null
+                : student.ExamSubmissions.length > 0 ? student.ExamSubmissions[0].pointsEarned : null
+        }));
+
+        res.json({ students: gradesData });
+    } catch (error) {
+        console.error('Error fetching grades:', error);
+        res.status(500).json({ message: 'Error fetching grades: ' + error.message });
+    }
+});
+
+
+
 app.get('/api/courses/:courseId/attendance', async (req, res) => {
     const { courseId } = req.params;
     try {
@@ -332,6 +387,59 @@ app.post('/api/attendance', async (req, res) => {
     }
 });
 
+app.post('/api/assignment-submissions', async (req, res) => {
+    const { assignmentId, studentId, pointsEarned } = req.body;
+    try {
+        const submission = await AssignmentSubmission.findOne({
+            where: { assignmentId, studentId }
+        });
+
+        if (submission) {
+            submission.pointsEarned = pointsEarned;
+            await submission.save();
+            res.status(200).json(submission);
+        } else {
+            const newSubmission = await AssignmentSubmission.create({
+                assignmentId,
+                studentId,
+                pointsEarned,
+                submissionDate: new Date()
+            });
+            res.status(201).json(newSubmission);
+        }
+    } catch (error) {
+        console.error('Error saving assignment submission:', error);
+        res.status(500).json({ message: 'Error saving assignment submission: ' + error.message });
+    }
+});
+
+app.post('/api/exam-submissions', async (req, res) => {
+    const { examId, studentId, pointsEarned } = req.body;
+    try {
+        const submission = await ExamSubmission.findOne({
+            where: { examId, studentId }
+        });
+
+        if (submission) {
+            submission.pointsEarned = pointsEarned;
+            await submission.save();
+            res.status(200).json(submission);
+        } else {
+            const newSubmission = await ExamSubmission.create({
+                examId,
+                studentId,
+                pointsEarned,
+                submissionDate: new Date()
+            });
+            res.status(201).json(newSubmission);
+        }
+    } catch (error) {
+        console.error('Error saving exam submission:', error);
+        res.status(500).json({ message: 'Error saving exam submission: ' + error.message });
+    }
+});
+
+
 app.get('/api/courses/:courseId/students', async (req, res) => {
     const { courseId } = req.params;
     try {
@@ -353,6 +461,58 @@ app.get('/api/courses/:courseId/students', async (req, res) => {
     }
 });
 
+app.get('/api/courses/:courseId/students/:studentId/final-grade', async (req, res) => {
+    const { courseId, studentId } = req.params;
+    // debugger
+    try {
+        // Fetch the student's assignments and exams for the course
+        const assignments = await Assignment.findAll({ where: { courseId } });
+        const exams = await Exam.findAll({ where: { courseId } });
+        const course = await Course.findByPk(courseId);
+
+        let totalGrade = 0;
+        let totalWeight = 0;
+        // Calculate the weighted grades for assignments and exams
+        for (const assignment of assignments) {
+            const submission = await AssignmentSubmission.findOne({
+                where: { assignmentId: assignment.id, studentId }
+            });
+            console.log("dsadas" +submission)
+            if (submission) {
+                totalGrade += submission.pointsEarned * assignment.assignmentWight;
+                totalWeight += parseFloat(assignment.assignmentWight);
+            }
+        }
+        
+        for (const exam of exams) {
+            const submission = await ExamSubmission.findOne({
+                where: { examId: exam.id, studentId }
+            });
+            if (submission) {
+                totalGrade += submission.pointsEarned * exam.examWight;
+                totalWeight += parseFloat(exam.examWight);
+            }
+        }
+
+        // Calculate attendance contribution
+        const attendanceRecords = await Attendance.findAll({
+            where: { studentId, courseId }
+        });
+        const attendanceRate = attendanceRecords.filter(record => record.status === 'T').length / attendanceRecords.length;
+        const attendanceContribution = attendanceRate * course.attendanceWeight;
+
+        // Final grade is the sum of weighted grades and attendance contribution
+        const finalGrade = totalGrade + attendanceContribution * 100;
+        
+        res.json({
+            studentName: (await Student.findByPk(studentId)).firstName + ' ' + (await Student.findByPk(studentId)).lastName,
+            finalGrade: finalGrade.toFixed(2) // Round to 2 decimal places
+        });
+    } catch (error) {
+        console.error('Error calculating final grade:', error);
+        res.status(500).json({ message: 'Error calculating final grade: ' + error.message });
+    }
+});
 
 /////////////////////////////////////////////////
 //              Simplte Get methods!
@@ -424,6 +584,26 @@ app.get('/api/attendance', async (req, res) => {
 app.get('/api/enrollment', async (req, res) => {
     try {
         const enrollment = await Enrollment.findAll();
+        res.json(enrollment);
+    } catch (error) {
+        res.status(500).send('Error fetching exams: ' + error.message);
+    }
+});
+
+// API route to get all exams
+app.get('/api/assignmentSubmission', async (req, res) => {
+    try {
+        const enrollment = await AssignmentSubmission.findAll();
+        res.json(enrollment);
+    } catch (error) {
+        res.status(500).send('Error fetching exams: ' + error.message);
+    }
+});
+
+// API route to get all exams
+app.get('/api/examSubmission', async (req, res) => {
+    try {
+        const enrollment = await ExamSubmission.findAll();
         res.json(enrollment);
     } catch (error) {
         res.status(500).send('Error fetching exams: ' + error.message);
