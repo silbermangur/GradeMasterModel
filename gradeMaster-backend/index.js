@@ -48,13 +48,15 @@ app.use(cors());
 
 // Import routes
 const teacherRoutes = require('./routes/teachers');
+const studentRoutes = require('./routes/students');
 
 // Use routes
 app.use('/api/teachers', teacherRoutes);
+app.use('/api/students', studentRoutes);
 
 // Sync the model with the database (creating the table if it doesn't exist)
 // {force: true}
-sequelize.sync()
+sequelize.sync({force: true})
     .then(() => {
         console.log('Database & tables created!');
     })
@@ -169,7 +171,7 @@ app.post('/api/examAssinmemnt', async (req, res) => {
     }
 });
 
-
+/*
 app.post('/api/students', async (req, res) => {
     try {
         const { firstName, lastName, dateOfBirth, gender, phoneNumber, address, email, enrollmentDate } = req.body;
@@ -192,7 +194,7 @@ app.post('/api/students', async (req, res) => {
         res.status(500).json({ message: 'Error creating student: ' + error.message });
     }
 });
-
+*/
 
 app.post('/api/enrollment', async (req, res) => {
     try {
@@ -580,7 +582,7 @@ app.get('/api/exams', async (req, res) => {
     }
 });
 
-
+/*
 // API route to get all exams
 app.get('/api/students', async (req, res) => {
     try {
@@ -590,7 +592,7 @@ app.get('/api/students', async (req, res) => {
         res.status(500).send('Error fetching exams: ' + error.message);
     }
 });
-
+*/
 // API route to get all exams
 app.get('/api/attendance', async (req, res) => {
     try {
