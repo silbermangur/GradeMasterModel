@@ -51,7 +51,7 @@ const teacherRoutes = require('./routes/teachers');
 const studentRoutes = require('./routes/students');
 const courseRoutes = require('./routes/courses');
 const attendanceRoutes = require('./routes/attendance');
-// const enrollmentRoutes = require('./routes/enrollment');
+const enrollmentRoutes = require('./routes/enrollment');
 // const assignmentRoutes = require('./routes/assignments');
 // const examRoutes = require('./routes/exams');
 // const submissionRoutes = require('./routes/submission');
@@ -61,7 +61,7 @@ app.use('/api/teachers', teacherRoutes);
 app.use('/api/students', studentRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/attendance', attendanceRoutes);
-// app.use('/api/enrollment', enrollmentRoutes);
+app.use('/api/enrollment', enrollmentRoutes);
 // app.use('/api/assignments', assignmentRoutes);
 // app.use('/api/exams', examRoutes);
 // app.use('/api/submissions', submissionRoutes);
@@ -184,7 +184,7 @@ app.post('/api/students', async (req, res) => {
     }
 });
 */
-
+/*
 app.post('/api/enrollment', async (req, res) => {
     try {
         const { studentId, courseId, enrollmentDate, finalGrade } = req.body;
@@ -202,6 +202,7 @@ app.post('/api/enrollment', async (req, res) => {
         res.status(500).json({ message: 'Error creating enrollment: ' + error.message });
     }
 });
+*/
 /*
 app.put('/api/attendance', async (req, res) => {
     const { studentId, courseId, status } = req.body;
@@ -593,6 +594,7 @@ app.get('/api/students', async (req, res) => {
 //     }
 // });
 
+/*
 // API route to get all exams
 app.get('/api/enrollment', async (req, res) => {
     try {
@@ -602,6 +604,7 @@ app.get('/api/enrollment', async (req, res) => {
         res.status(500).send('Error fetching exams: ' + error.message);
     }
 });
+*/
 
 // API route to get all exams
 app.get('/api/assignmentSubmission', async (req, res) => {
