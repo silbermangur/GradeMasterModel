@@ -72,7 +72,7 @@ document.getElementById("classform").addEventListener('submit', async(e)=> {
 
     // Send course data to backend
     try {
-        const response = await fetch('http://localhost:3000/api/examAssinmemnt', {
+        const response = await fetch('http://localhost:3000/api/assignmentsExams', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -52,7 +52,7 @@ const studentRoutes = require('./routes/students');
 const courseRoutes = require('./routes/courses');
 const attendanceRoutes = require('./routes/attendance');
 const enrollmentRoutes = require('./routes/enrollment');
-// const assignmentRoutes = require('./routes/assignments');
+const assignmentExamController = require('./routes/assignmentsExams');
 // const examRoutes = require('./routes/exams');
 // const submissionRoutes = require('./routes/submission');
 
@@ -62,7 +62,7 @@ app.use('/api/students', studentRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api/enrollment', enrollmentRoutes);
-// app.use('/api/assignments', assignmentRoutes);
+app.use('/api/assignmentsExams', assignmentExamController);
 // app.use('/api/exams', examRoutes);
 // app.use('/api/submissions', submissionRoutes);
 
@@ -116,6 +116,7 @@ app.post('/api/classes', async (req, res) => {
 });
 */
 
+/*
 // API route to create a new course with associated exams and assignments
 app.post('/api/examAssinmemnt', async (req, res) => {
     try {
@@ -159,7 +160,7 @@ app.post('/api/examAssinmemnt', async (req, res) => {
         res.status(500).json({ message: 'Error creating course: ' + error.message });
     }
 });
-
+*/
 /*
 app.post('/api/students', async (req, res) => {
     try {
@@ -387,6 +388,7 @@ app.post('/api/attendance', async (req, res) => {
 });
 */
 
+// create AssignmentSubmission Object
 app.post('/api/assignment-submissions', async (req, res) => {
     const { assignmentId, studentId, pointsEarned } = req.body;
     try {
@@ -412,7 +414,7 @@ app.post('/api/assignment-submissions', async (req, res) => {
         res.status(500).json({ message: 'Error saving assignment submission: ' + error.message });
     }
 });
-
+// create ExamSubmission Object
 app.post('/api/exam-submissions', async (req, res) => {
     const { examId, studentId, pointsEarned } = req.body;
     try {
@@ -552,26 +554,26 @@ app.get('/api/teachers', async (req, res) => {
 //     }
 // });
 
-// API route to get all assignments
-app.get('/api/assignments', async (req, res) => {
-    try {
-        const assignments = await Assignment.findAll();
-        res.json(assignments);
-    } catch (error) {
-        res.status(500).send('Error fetching assignments: ' + error.message);
-    }
-});
+// // API route to get all assignments
+// app.get('/api/assignments', async (req, res) => {
+//     try {
+//         const assignments = await Assignment.findAll();
+//         res.json(assignments);
+//     } catch (error) {
+//         res.status(500).send('Error fetching assignments: ' + error.message);
+//     }
+// });
 
 
-// API route to get all exams
-app.get('/api/exams', async (req, res) => {
-    try {
-        const exams = await Exam.findAll();
-        res.json(exams);
-    } catch (error) {
-        res.status(500).send('Error fetching exams: ' + error.message);
-    }
-});
+// // API route to get all exams
+// app.get('/api/exams', async (req, res) => {
+//     try {
+//         const exams = await Exam.findAll();
+//         res.json(exams);
+//     } catch (error) {
+//         res.status(500).send('Error fetching exams: ' + error.message);
+//     }
+// });
 
 /*
 // API route to get all exams

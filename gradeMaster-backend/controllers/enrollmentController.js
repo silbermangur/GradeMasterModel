@@ -28,12 +28,3 @@ exports.getAllEnrolments = async (req,res) => {
 }
 
 
-// exports.getEnrollmentsByCourse = async (req, res) => {
-//     const { courseId } = req.params;
-//     try {
-//         const enrollments = await Enrollment.findAll({ where: { courseId } });
-//         res.json(enrollments);
-//     } catch (error) {
-//         res.status(500).send('Error fetching enrollments: ' + error.message);
-//     }
-// };
