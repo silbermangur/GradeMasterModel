@@ -21,8 +21,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             const endpoint = gradeType === 'assignment' 
-                ? 'http://localhost:3000/api/assignment-submissions'
-                : 'http://localhost:3000/api/exam-submissions';
+                ? 'http://localhost:3000/api/submissions/assignment'
+                : 'http://localhost:3000/api/submissions/exam';
 
             const response = await fetch(endpoint, {
                 method: 'POST',

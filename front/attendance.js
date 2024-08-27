@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Load the courses for the teacher
     try {
-        const response = await fetch(`http://localhost:3000/api/teacher/${teacherId}/courses`);
+        const response = await fetch(`http://localhost:3000/api/teachers/${teacherId}/courses`);
         const courses = await response.json();
 
         if (response.ok) {
