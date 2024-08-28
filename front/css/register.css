@@ -1,0 +1,28 @@
+body {
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.register-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+}
+
+.register-container h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.register-container .btn {
+    background-color: #28a745;
+    border: none;
+}
+
+.register-container .btn:hover {
+    background-color: #218838;
+}

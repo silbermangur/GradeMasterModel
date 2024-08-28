@@ -109,13 +109,14 @@ async function loadGrades(courseId, assignmentExamId, type) {
                 // Grade display with change button
                 const gradeCell = document.createElement('td');
                 if (student.grade !== null) {
-                    const gradeSpan = document.createElement('span');
+                    const gradeSpan = document.createElement('h1');
+                    gradeSpan.className = 'text-danger'
                     gradeSpan.textContent = student.grade;
                     gradeCell.appendChild(gradeSpan);
 
                     const button = document.createElement('button');
                     button.textContent = 'שנה ציון';
-                    button.className = 'btn btn-warning btn-sm ml-2';
+                    button.className = 'btn btn-primary btn-sm ml-2';
                     button.addEventListener('click', function() {
                         const gradeType = type === 'assignment' ? 'assignment' : 'exam';
                         localStorage.setItem('gradeType', gradeType);
@@ -141,17 +142,17 @@ async function loadGrades(courseId, assignmentExamId, type) {
 
                 // Add final grade button and display area
                 const finalGradeCell = document.createElement('td');
+                const finalGradeDisplay = document.createElement('h1');
                 const finalGradeButton = document.createElement('button');
+
                 finalGradeButton.textContent = 'חשב ציון סופי';
                 finalGradeButton.className = 'btn btn-success btn-sm';
-                
-                const finalGradeDisplay = document.createElement('span');
-                finalGradeDisplay.className = 'ml-2'; // Add some margin for spacing
+                finalGradeDisplay.className = 'text-info';
                 
                 finalGradeButton.addEventListener('click', async function() {
                     const finalGrade = await calculateFinalGrade(student.id, courseId);
                     if (finalGrade) {
-                        finalGradeDisplay.textContent = `ציון סופי: ${finalGrade}`;
+                        finalGradeDisplay.textContent = `${finalGrade}`;
                         alert(`Final Grade for ${student.firstName} ${student.lastName}: ${finalGrade}`);
                     }
                 });

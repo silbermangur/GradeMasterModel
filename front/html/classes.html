@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הגדרת כיתה - GradeMaster</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/classes.css"> <!-- Link to the custom CSS file -->
+
+</head>
+<body dir="rtl">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="Home.html">GradeMaster</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/classes.html">Classes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/students.html">Students</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/grades.html">Grades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/reports.html">Reports</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/export_import.html">Export_Import data</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/attendance.html">Attendance</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h2 class="text-center mt-5">create new course  </h2>
+        <form id="classform">
+            <div class="form-group">
+                <label for="className">class name</label>
+                <input type="text" class="form-control" id="className" placeholder="enter your class name">
+
+                <label for="classCode">class Code</label>
+                <input type="text" class="form-control" id="classCode" placeholder="enter your class code">
+
+                <label for="classCredit">class credits</label>
+                <input type="number" class="form-control" id="classCredit" placeholder="enter your class credits">
+
+                <label for="AttendanceWeight">class AttendanceWeight</label>
+                <input type="number" class="form-control" id="attendanceWeight" required min="0" max="1" step=".01" placeholder="enter your class AttendanceWeight">
+            </div>
+            <button type="submit" class="btn btn-success btn-block">Save the class only</button>
+            
+        </form>
+    </div>
+    <script src="../Js/classes.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

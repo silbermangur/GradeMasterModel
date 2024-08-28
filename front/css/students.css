@@ -1,0 +1,80 @@
+/* students.css */
+body {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    padding-top: 60px; /* To prevent content from being hidden under the navbar */
+}
+
+.navbar {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+h2 {
+    color: #343a40;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #495057;
+    margin-bottom: 5px;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #ced4da;
+    margin-bottom: 15px;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.table th,
+.table td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}
+
+.btn-block {
+    width: 100%;
+    text-align: center;
+}

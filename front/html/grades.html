@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ניהול ציונים - GradeMaster</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css//grades.css">
+</head>
+<body dir="rtl">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="Home.html">GradeMaster</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/classes.html">Classes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/students.html">Students</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/grades.html">Grades</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/reports.html">Reports</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/export_import.html">Export_Import data</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/attendance.html">Attendance</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h2 class="text-center mt-5">Grade Mangment </h2>
+        <div class="form-group">
+            <label for="classSelect">choose course</label>
+            <select class="form-control" id="classSelect">
+                <!-- Courses will be dynamically loaded here -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="assignmentSelect">choose assignment or exam</label>
+            <select class="form-control" id="assignmentSelect">
+                <!-- Assignments and exams will be dynamically loaded here -->
+            </select>
+        </div>
+        <div id="gradesTableContainer" class="mt-4">
+            <!-- Grades table will be dynamically generated here -->
+        </div>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../Js/grades.js"></script> <!-- Link to the grades.js script -->
+</body>
+</html>

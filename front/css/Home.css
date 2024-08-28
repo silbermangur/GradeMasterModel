@@ -1,0 +1,56 @@
+/* home.css */
+body {
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    max-width: 800px;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+h2 {
+    color: #343a40;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.btn {
+    padding: 15px;
+    font-size: 18px;
+    border-radius: 10px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #ff6b6b;
+    border-color: #ff6b6b;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #ff4757;
+    border-color: #ff4757;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    background-color: #ff3e41;
+    border-color: #ff3e41;
+    box-shadow: none;
+    transform: translateY(0);
+}
+
+.btn-primary:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px rgba(255, 107, 107, 0.5);
+}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>דוחות - GradeMaster</title>
+    <title>הצגת ציונים סופיים וממוצעים - GradeMaster</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body dir="rtl">
@@ -15,35 +15,29 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="classes.html">כיתות</a>
+                    <a class="nav-link" href="../html/classes.html">Classes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="students.html">סטודנטים</a>
+                    <a class="nav-link" href="../html/students.html">Students</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="grades.html">ציונים</a>
+                    <a class="nav-link" href="../html/grades.html">Grades</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="reports.html">דוחות</a>
+                    <a class="nav-link" href="../html/reports.html">Reports</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="settings.html">הגדרות</a>
+                    <a class="nav-link" href="../html/export_import.html">Export_Import data</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../html/attendance.html">Attendance</a>
                 </li>
             </ul>
         </div>
     </nav>
-    
     <div class="container">
-        <h2 class="text-center mt-5">הפקת דוחות</h2>
+        <h2 class="text-center mt-5">ציונים סופיים וממוצעים</h2>
         <form>
-            <div class="form-group">
-                <label for="reportType">בחר סוג דוח</label>
-                <select class="form-control" id="reportType">
-                    <option value="grades">דוח ציונים</option>
-                    <option value="attendance">דוח נוכחות</option>
-                    <option value="finalGrades">דוח ציונים סופיים</option>
-                </select>
-            </div>
             <div class="form-group">
                 <label for="classSelect">בחר כיתה</label>
                 <select class="form-control" id="classSelect">
@@ -52,19 +46,33 @@
                     <option value="class3">כיתה ג'</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label for="dateRange">בחר טווח תאריכים</label>
-                <input type="date" class="form-control" id="startDate">
-                <input type="date" class="form-control mt-2" id="endDate">
+            <div id="finalGradesList">
+                <h4>ציונים סופיים</h4>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>שם הסטודנט</th>
+                            <th>ציון סופי</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>סטודנט 1</td>
+                            <td>90</td>
+                        </tr>
+                        <tr>
+                            <td>סטודנט 2</td>
+                            <td>85</td>
+                        </tr>
+                        <!-- ניתן להוסיף עוד שורות של סטודנטים -->
+                    </tbody>
+                </table>
             </div>
-            <button type="button" class="btn btn-primary btn-block">הפק דוח</button>
+            <div id="classAverage">
+                <h4>ממוצע כיתתי</h4>
+                <p>הממוצע הכיתתי הוא: <strong>87.5</strong></p>
+            </div>
         </form>
-
-        <div id="reportResult" class="mt-5">
-            <!-- כאן יוצג הדוח שהופק -->
-            <h4 class="text-center">תוצאות הדוח</h4>
-            <p class="text-center">כאן יופיעו נתוני הדוח...</p>
-        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
