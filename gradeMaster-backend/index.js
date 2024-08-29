@@ -66,7 +66,7 @@ app.use('/api/submissions', submissionRoutes);
 
 // Sync the model with the database (creating the table if it doesn't exist)
 // {force: true}
-sequelize.sync({force: true} )
+sequelize.sync( )
     .then(() => {
         console.log('Database & tables created!');
     })

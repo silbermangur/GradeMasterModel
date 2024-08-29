@@ -10,4 +10,6 @@ router.get('/:courseId/grades',courseController.getAllGradesOfStudent);
 router.get('/:courseId/attendance',courseController.getAllattendeanceOfStudentsByCourse);
 router.get('/:courseId/students',courseController.getAllStudentsOfCourse);
 router.get('/:courseId/students/:studentId/final-grade',courseController.finalGrade);
+router.get('/:courseId/report', courseController.generateReport);
+
 module.exports = router;

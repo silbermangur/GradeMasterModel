@@ -7,6 +7,9 @@ const Exam = require('../models/exam')
 const AssignmentSubmission = require('../models/assignmentSubmission')
 const ExamSubmission = require('../models/examSubmission')
 const sequelize = require('../config/database');
+const PDFDocument = require('pdfkit')
+const fs = require('fs');
+const path = require('path');
 
 exports.createCourse = async (req, res) => {
     try {
@@ -240,3 +243,88 @@ exports.finalGrade = async (req,res) => {
         res.status(500).json({ message: 'Error calculating final grade: ' + error.message });
     }
 }
+exports.generateReport = async (req, res) => {
+    const { courseId  } = req.params;
+
+    try {
+        // Fetch the course details
+        const course = await Course.findByPk(courseId);
+        if (!course) {
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        // Fetch all students enrolled in the course
+        const students = await Student.findAll({
+            include: {
+                model: Enrollment,
+                where: { courseId }
+            }
+        });
+
+        if (!students || students.length === 0) {
+            return res.status(404).json({ message: 'No students found for this course.' });
+        }
+
+        // Ensure the reports directory exists
+        const reportsDir = path.join(__dirname, '../reports');
+        if (!fs.existsSync(reportsDir)) {
+            fs.mkdirSync(reportsDir);
+        }
+
+        // Create a new PDF document
+        const doc = new PDFDocument();
+        const filePath = path.join(reportsDir, `course_${courseId}_report.pdf`);
+        const stream = fs.createWriteStream(filePath);
+
+        doc.pipe(stream);
+
+        // Add some metadata
+        doc.info.Title = `Course Report: ${course.courseName}`;
+        doc.info.Author = 'GradeMaster';
+
+        // Header
+        doc.fontSize(18).text(`Course Report: ${course.courseName}`, { align: 'center' });
+        doc.moveDown();
+
+        // Table header
+        doc.fontSize(12).text('Student Name', { width: 150, continued: true });
+        doc.text('Final Grade', { width: 100, align: 'right' });
+        doc.moveDown();
+
+        // Fetch grades and attendance for each student
+        for (const student of students) {
+            const enrollment = await Enrollment.findOne({ where: { studentId: student.id, courseId } });
+            if (!enrollment) continue;
+
+            doc.text(`${student.firstName} ${student.lastName}`, { width: 150, continued: true });
+            doc.text(`${enrollment.finalGrade}`, { width: 100, align: 'right' });
+            doc.moveDown();
+        }
+
+        // Finalize the PDF and end the stream
+        doc.end();
+
+       // Wait for the PDF to be fully written before sending the response
+       stream.on('finish', () => {
+        res.download(filePath, `course_${courseId}_report.pdf`, (err) => {
+            if (err) {
+                console.error('Error downloading file:', err);
+                res.status(500).send('Error downloading the file');
+            }
+
+            // Optional: delete the file after download
+            fs.unlink(filePath, (err) => {
+                if (err) console.error('Error deleting file:', err);
+            });
+        });
+    });
+
+    stream.on('error', (err) => {
+        console.error('Error writing PDF file:', err);
+        res.status(500).json({ message: 'Error writing PDF file: ' + err.message });
+    });
+} catch (error) {
+    console.error('Error generating report:', error);
+    res.status(500).json({ message: 'Error generating report: ' + error.message });
+}
+};
