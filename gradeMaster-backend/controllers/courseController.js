@@ -159,6 +159,24 @@ exports.getAllattendeanceOfStudentsByCourse = async (req,res) => {
         res.status(500).json({ message: 'Error fetching attendance data: ' + error.message });
     }
 }
+exports.getAllAttendanceOfCourse = async (req,res)=> {
+    try {
+        const courseId = req.params.courseId;
+
+        // Find all lessons associated with the given courseId
+        const lessons = await Attendance.findAll({
+            where: { courseId: courseId }
+        });
+
+        // Extract the dates from the lessons and return them as an array
+        const lessonDates = lessons.map(lesson => lesson.date);
+
+        res.json(lessonDates);
+    } catch (error) {
+        console.error('Error fetching lessons:', error);
+        res.status(500).send('Error fetching lessons: ' + error.message);
+    }
+}
 exports.getAllStudentsOfCourse = async (req,res) => {
     const { courseId } = req.params;
     try {

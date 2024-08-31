@@ -49,17 +49,14 @@ document.addEventListener('DOMContentLoaded', async function() {
 async function loadAttendance(courseId) {
     try {
         const response = await fetch(`http://localhost:3000/api/courses/${courseId}/attendance`);
-        const attendanceData = await response.json();
+        const data = await response.json();
 
         if (response.ok) {
             const attendanceTableContainer = document.getElementById('attendanceTableContainer');
             attendanceTableContainer.innerHTML = ''; // Clear previous table
 
-            
-            /*
-            // Retrieve lesson dates from localStorage
-            let lessonDates = JSON.parse(localStorage.getItem('lessonDates')) || [];
-            */
+            const { students, dates } = data;
+
             // Create attendance table
             const table = document.createElement('table');
             table.className = 'table table-bordered';
@@ -68,7 +65,7 @@ async function loadAttendance(courseId) {
             const thead = document.createElement('thead');
             const headerRow = document.createElement('tr');
             headerRow.innerHTML = '<th>שם הסטודנט</th>';
-            lessonDates.forEach(date => {
+            dates.forEach(date => {
                 const th = document.createElement('th');
                 th.textContent = new Date(date).toLocaleDateString('he-IL');
                 headerRow.appendChild(th);
@@ -78,10 +75,10 @@ async function loadAttendance(courseId) {
 
             // Create table body
             const tbody = document.createElement('tbody');
-            attendanceData.students.forEach(student => {
+            students.forEach(student => {
                 const row = document.createElement('tr');
                 row.innerHTML = `<td>${student.firstName} ${student.lastName}</td>`;
-                lessonDates.forEach(date => {
+                dates.forEach(date => {
                     const td = document.createElement('td');
                     const select = document.createElement('select');
                     select.className = 'form-control';
@@ -101,7 +98,7 @@ async function loadAttendance(courseId) {
 
             attendanceTableContainer.appendChild(table);
         } else {
-            alert('Failed to load attendance: ' + attendanceData.message);
+            alert('Failed to load attendance: ' + data.message);
         }
     } catch (error) {
         console.error('Error loading attendance:', error);
@@ -126,8 +123,6 @@ async function updateAttendance(studentId, courseId, date, status) {
         });
 
         if (!response.ok) {
-            console.log(`Looking for attendance record: studentId=${studentId}, courseId=${courseId}, date=${date}`);
-
             alert('Failed to update attendance');
         }
     } catch (error) {
@@ -135,3 +130,10 @@ async function updateAttendance(studentId, courseId, date, status) {
         alert('Error updating attendance: ' + error.message);
     }
 }
+
+
+
+
+
+
+
