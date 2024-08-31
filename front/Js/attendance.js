@@ -55,9 +55,11 @@ async function loadAttendance(courseId) {
             const attendanceTableContainer = document.getElementById('attendanceTableContainer');
             attendanceTableContainer.innerHTML = ''; // Clear previous table
 
+            
+            /*
             // Retrieve lesson dates from localStorage
             let lessonDates = JSON.parse(localStorage.getItem('lessonDates')) || [];
-
+            */
             // Create attendance table
             const table = document.createElement('table');
             table.className = 'table table-bordered';

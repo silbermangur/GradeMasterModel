@@ -2,6 +2,7 @@
 const express = require('express');
 const sequelize = require('./config/database');
 const cors = require('cors');
+const bcrypt =  require('bcrypt');
 
 // Import models
 const Teacher = require('./models/teacher');
@@ -78,7 +79,7 @@ sequelize.sync( )
 // Login endpoint
 app.post('/api/login', async (req, res) => {
     try {
-        const { email } = req.body;
+        const { email , password } = req.body;
 
         // Find the teacher by email and password
         const teacher = await Teacher.findOne({ where: { email } });
@@ -86,6 +87,13 @@ app.post('/api/login', async (req, res) => {
         if (!teacher) {
             return res.status(404).json({ message: 'Invalid email or password' });
         }
+
+         // Compare the hashed password
+        const isMatch = await bcrypt.compare(password, teacher.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+       
 
         // Login successful
         res.json({ message: 'Login successful', teacher });

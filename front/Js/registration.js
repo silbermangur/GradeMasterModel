@@ -1,3 +1,19 @@
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type} show`;
+
+    // Show the notification
+    notification.style.display = 'block';
+
+    // Hide the notification after 3 seconds
+    setTimeout(() => {
+        notification.className = `notification ${type}`;
+        setTimeout(() => notification.style.display = 'none', 300);
+    }, 3000);
+}
+
+
 document.getElementById('registrationForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -29,13 +45,13 @@ document.getElementById('registrationForm').addEventListener('submit', async (e)
         
 
         if (response.ok) {
-            alert('Teacher registered successfully!');
-            window.location.href = 'login.html'; // Redirect to login page after success
+            showNotification('Teacher registered successfully!', 'success');
+            setTimeout(() => window.location.href = 'login.html', 3000); // Redirect after showing notification
         } else {
             const errorData = await response.json();
-            alert('Failed to register teacher: ' + errorData.message);
+            showNotification('Failed to register teacher: ' + errorData.message,'error');
         }
     } catch (error) {
-        alert('Error: ' + error.message);
+        showNotification('Error: ' + error.message, 'error');
     }
 });

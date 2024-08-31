@@ -3,28 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Login - GradeMaster</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../css/login.css"> <!-- Updated CSS file -->
 </head>
 <body>
     <div class="login-container">
-        <h2 class="text-center">Enter the model</h2>
-                <form id="loginform">
-                    <div class="form-group">
-                        <label for="email">Email  </label>
-                        <input type="email" class="form-control" id="email" placeholder="Enter your email ">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">password</label>
-                        <input type="password" class="form-control" id="password" placeholder="Enter your Password ">
-                    </div>
-                    <button type="submit" class="btn btn-primary btn-block">Log in</button>
-                    <p class="text-center mt-3">Don't have an account? <a href="registration.html">Register</a></p>
-                </form>
-            </div>
+        <div class="login-header text-center">
+            <h2>Welcome to GradeMaster</h2>
         </div>
+        <form id="loginform" class="login-form">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Log in</button>
+            <p class="text-center mt-3">Don't have an account? <a href="registration.html">Register</a></p>
+            <div id="notification" class="notification"></div>
+        </form>
     </div>
+   
+
     <script src="../Js/login.js"></script> <!-- Link to the external JS file -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>

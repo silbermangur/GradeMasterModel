@@ -1,28 +1,119 @@
-body {
-    background-color: #f8f9fa;
+/* register.css */
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #00c6ff, #0072ff); /* Matching background gradient */
     display: flex;
-    justify-content: center;
     align-items: center;
-    height: 100vh;
+    justify-content: center;
 }
 
 .register-container {
     background-color: #ffffff;
-    padding: 30px;
+    padding: 40px;
     border-radius: 10px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 400px;
+    animation: slideIn 0.8s ease-out;
 }
 
-.register-container h2 {
+.register-header {
     margin-bottom: 20px;
-    font-size: 24px;
 }
 
-.register-container .btn {
+.register-header h2 {
+    font-size: 28px;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.register-form .form-group {
+    margin-bottom: 20px;
+}
+
+.register-form label {
+    font-weight: bold;
+    color: #333;
+}
+
+.register-form .form-control {
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-size: 16px;
+    box-shadow: none;
+}
+
+.register-form .btn {
     background-color: #28a745;
     border: none;
+    padding: 12px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.register-container .btn:hover {
+.register-form .btn:hover {
     background-color: #218838;
+    transform: scale(1.05);
+}
+
+.register-form p {
+    font-size: 14px;
+    color: #555;
+}
+
+.register-form p a {
+    color: #28a745;
+    text-decoration: none;
+}
+
+.register-form p a:hover {
+    text-decoration: underline;
+}
+
+/* Notification styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 1000;
+    display: none;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.notification.success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.notification.error {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+
+/* Slide-in animation for the form container */
+@keyframes slideIn {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }

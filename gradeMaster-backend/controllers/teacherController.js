@@ -1,11 +1,17 @@
 const Teacher = require('../models/teacher');
 const Course = require('../models/course');
+const bcrypt =  require('bcrypt')
+
 exports.createTeacher = async (req, res) => {
     try {
         const { firstName, lastName, email, password, phoneNumber } = req.body;
-        const newTeacher = await Teacher.create({ firstName, lastName, email, password, phoneNumber });
-        res.json(newTeacher);
+         // Hash the password
+         const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newTeacher = await Teacher.create({ firstName, lastName, email, password: hashedPassword,  phoneNumber });
+        res.status(201).json({ message: 'Teacher registered successfully', teacher: newTeacher });
     } catch (error) {
+        console.error('Error creating teacher:', error.message);
         res.status(500).send('Error creating teacher: ' + error.message);
     }
 };
