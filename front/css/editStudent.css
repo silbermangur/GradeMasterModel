@@ -12,58 +12,43 @@ body {
 }
 
 .container {
-    width: 90%;
-    margin: 20px auto;
+    max-width: 600px;
+    width: 100%;
     background-color: #ffffff;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Attendance table styles */
-.table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    overflow: hidden;
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
 }
 
-.table th, .table td {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-}
-
-.table th {
-    background-color: #007bff;
-    color: white;
-    text-transform: uppercase;
+.form-group label {
     font-weight: 600;
+    color: #333;
 }
 
-.table td {
-    background-color: #f9f9f9;
-}
-
-.attendance-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.attendance-wrapper select {
-    width: auto;
-    margin-right: 10px;
-}
-
-/* Button styles */
-.btn {
-    padding: 8px 15px;
+.form-group input, .form-group select {
     font-size: 16px;
-    border-radius: 4px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.form-group input:focus, .form-group select:focus {
+    border-color: #007bff;
+    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+}
+
+.btn {
+    padding: 10px 15px;
+    font-size: 18px;
+    border-radius: 5px;
     cursor: pointer;
-    text-transform: capitalize;
+    text-transform: uppercase;
     transition: background-color 0.3s ease;
 }
 
@@ -77,19 +62,8 @@ body {
     background-color: #0056b3;
 }
 
-.btn-danger {
-    background-color: #dc3545;
-    border: none;
-    color: white;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-}
-
 .btn-block {
     width: 100%;
-    font-size: 18px;
 }
 
 /* Notification styles */
@@ -116,10 +90,4 @@ body {
 
 .notification.error {
     background-color: #f44336;
-}
-
-#addLessonBtn{
-    font-size: 20px;
-    margin-top: 15px;
-    margin-bottom: 15px;
 }

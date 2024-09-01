@@ -44,11 +44,15 @@ document.addEventListener('DOMContentLoaded', async function() {
         showNotification('Error loading courses: ' + error.message, 'error');
     }
 
-    // Add event listener for "Add New Student" button
+    // Add event listener for "Add New Student" button with attendance check
     const addStudentBtn = document.getElementById('addStudentBtn');
     if (addStudentBtn) {
-        addStudentBtn.addEventListener('click', function() {
-            window.location.href = 'addStudent.html';
+        addStudentBtn.addEventListener('click', async function() {
+            const selectedCourseId = document.getElementById('classSelect').value;
+            await checkAttendance(selectedCourseId);
+            if (!addStudentBtn.disabled) {
+                window.location.href = 'addStudent.html';
+            }
         });
     }
 });
@@ -66,15 +70,24 @@ async function loadStudents(courseId) {
             students.forEach(student => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${student.firstName}</td>
-                    <td>${student.lastName}</td>
-                    <td>${student.studentId}</td>
+                    <td>${student.firstName} ${student.lastName}</td>
+                    <td>${student.id}</td>
+                    <td>${courseId}</td>
                     <td>
-                        <button class="btn btn-sm btn-warning">ערוך</button>
-                        <button class="btn btn-sm btn-danger" data-student-id="${student.id}" data-course-id="${courseId}">מחק</button>
+                        <button class="btn btn-sm btn-warning" data-student-id="${student.id}" data-course-id="${courseId}">edit</button>
+                        <button class="btn btn-sm btn-danger" data-student-id="${student.id}" data-course-id="${courseId}">delete</button>
                     </td>
                 `;
                 studentsList.appendChild(row);
+            });
+
+            // Attach event listeners to edit buttons
+            const editButtons = document.querySelectorAll('.btn-warning');
+            editButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const studentId = this.getAttribute('data-student-id');
+                    window.location.href = `editStudent.html?studentId=${studentId}`;
+                });
             });
 
             // Attach event listeners to delete buttons
@@ -88,6 +101,7 @@ async function loadStudents(courseId) {
             });
 
         } else {
+            console.log("error")
             showNotification('Failed to load students: ' + students.message, 'error');
         }
     } catch (error) {

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>attendance</title>
+    <title>Attendance Tracker</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/attendance.css"> 
 </head>
@@ -28,23 +28,23 @@
                     <a class="nav-link" href="../html/reports.html">Reports</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../html/export_import.html">Export_Import data</a>
+                    <a class="nav-link" href="../html/export_import.html">Export/Import Data</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="../html/attendance.html">Attendance</a>
+                    <a class="nav-link active" href="../html/attendance.html">Attendance</a>
                 </li>
             </ul>
         </div>
     </nav>
     <div class="container">
-        <h2 class="text-center mt-5"> attendance tracker</h2>
+        <h2 class="text-center mt-5">Attendance Tracker</h2>
         <div class="form-group">
-            <label for="classSelect">choose course </label>
+            <label for="classSelect">Choose Course</label>
             <select class="form-control" id="classSelect">
                 <!-- Courses will be dynamically loaded here -->
             </select>
         </div>
-        <button class="btn btn-primary btn-block mt-3" id="addLessonBtn">add lesson </button>
+        <button class="btn btn-primary btn-block" id="addLessonBtn">Add Lesson</button>
         <div id="attendanceTableContainer" class="mt-4">
             <!-- Attendance table will be dynamically generated here -->
         </div>

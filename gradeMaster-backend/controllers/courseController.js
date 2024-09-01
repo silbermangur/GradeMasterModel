@@ -57,11 +57,6 @@ exports.getAllEnrolledStudents = async (req,res) => {
                 where: { courseId }
             }]
         });
-
-        if (!students || students.length === 0) {
-            return res.status(404).json({ message: 'No students found for this course.' });
-        }
-
         res.json(students);
     } catch (error) {
         console.error('Error fetching students:', error);
