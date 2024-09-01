@@ -11,5 +11,6 @@ router.get('/:courseId/attendance',courseController.getAllattendeanceOfStudentsB
 router.get('/:courseId/students',courseController.getAllStudentsOfCourse);
 router.get('/:courseId/students/:studentId/final-grade',courseController.finalGrade);
 router.get('/:courseId/report', courseController.generateReport);
+router.get('/:courseId/attendance-check', courseController.attendanceCheck);
 
 module.exports = router;

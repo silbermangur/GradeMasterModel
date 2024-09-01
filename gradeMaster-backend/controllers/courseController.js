@@ -346,3 +346,19 @@ exports.generateReport = async (req, res) => {
     res.status(500).json({ message: 'Error generating report: ' + error.message });
 }
 };
+
+exports.attendanceCheck = async (req,res) => {
+    const { courseId } = req.params;
+    try {
+        const attendanceExists = await Attendance.findOne({ where: { courseId } });
+
+        if (attendanceExists) {
+            res.json({ exists: true });
+        } else {
+            res.json({ exists: false });
+        }
+    } catch (error) {
+        console.error('Error checking attendance:', error);
+        res.status(500).json({ message: 'Error checking attendance: ' + error.message });
+    }
+};

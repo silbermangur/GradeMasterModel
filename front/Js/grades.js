@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const teacherId = localStorage.getItem('teacherId');
 
     if (!teacherId) {
-        alert('Teacher ID not found in local storage.');
+        showNotification('Teacher ID not found in local storage.', 'error');
         return;
     }
 
@@ -31,11 +31,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                 await loadAssignmentsAndExams(courseId);
             });
         } else {
-            alert('Failed to load courses: ' + courses.message);
+            showNotification('Failed to load courses: ' + courses.message, 'error');
         }
     } catch (error) {
         console.error('Error loading courses:', error);
-        alert('Error loading courses: ' + error.message);
+        showNotification('Error loading courses: ' + error.message, 'error');
     }
 });
 
@@ -43,9 +43,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 async function loadAssignmentsAndExams(courseId) {
     try {
         const response = await fetch(`http://localhost:3000/api/courses/${courseId}/assignments-exams`);
-        
         const assignmentsExams = await response.json();
-        
+
         if (response.ok) {
             const assignmentSelect = document.getElementById('assignmentSelect');
             assignmentSelect.innerHTML = ''; // Clear previous options
@@ -54,7 +53,7 @@ async function loadAssignmentsAndExams(courseId) {
                 const option = document.createElement('option');
                 option.value = item.id;
                 option.textContent = item.type === 'assignment' ? item.assignmentName : item.examName;
-                
+
                 option.dataset.type = item.type; // "assignment" or "exam"
                 assignmentSelect.appendChild(option);
             });
@@ -71,15 +70,15 @@ async function loadAssignmentsAndExams(courseId) {
                 await loadGrades(courseId, assignmentExamId, type);
             });
         } else {
-            alert('Failed to load assignments/exams: ' + assignmentsExams.message);
+            showNotification('Failed to load assignments/exams: ' + assignmentsExams.message, 'error');
         }
     } catch (error) {
         console.error('Error loading assignments/exams:', error);
-        alert('Error loading assignments/exams: ' + error.message);
+        showNotification('Error loading assignments/exams: ' + error.message, 'error');
     }
 }
 
-// Function to load grades for a specific assignment/exam
+// Function to load grades and final scores for a specific assignment/exam
 async function loadGrades(courseId, assignmentExamId, type) {
     try {
         const response = await fetch(`http://localhost:3000/api/courses/${courseId}/grades?assignmentExamId=${assignmentExamId}&type=${type}`);
@@ -96,26 +95,26 @@ async function loadGrades(courseId, assignmentExamId, type) {
             // Create table header
             const thead = document.createElement('thead');
             const headerRow = document.createElement('tr');
-            headerRow.innerHTML = `<th>שם הסטודנט</th><th>${type === 'assignment' ? 'ציון משימה' : 'ציון מבחן'}</th><th>ציון סופי</th>`;
+            headerRow.innerHTML = `<th>Student Name</th><th>${type === 'assignment' ? 'Assignment Grade' : 'Exam Grade'}</th><th>Final Score</th>`;
             thead.appendChild(headerRow);
             table.appendChild(thead);
 
             // Create table body
             const tbody = document.createElement('tbody');
-            gradesData.students.forEach(student => {
+            for (const student of gradesData.students) {
                 const row = document.createElement('tr');
                 row.innerHTML = `<td>${student.firstName} ${student.lastName}</td>`;
-                
+
                 // Grade display with change button
                 const gradeCell = document.createElement('td');
                 if (student.grade !== null) {
                     const gradeSpan = document.createElement('h1');
-                    gradeSpan.className = 'text-danger'
+                    gradeSpan.className = 'text-danger';
                     gradeSpan.textContent = student.grade;
                     gradeCell.appendChild(gradeSpan);
 
                     const button = document.createElement('button');
-                    button.textContent = 'שנה ציון';
+                    button.textContent = 'Change Grade';
                     button.className = 'btn btn-primary btn-sm ml-2';
                     button.addEventListener('click', function() {
                         const gradeType = type === 'assignment' ? 'assignment' : 'exam';
@@ -127,7 +126,7 @@ async function loadGrades(courseId, assignmentExamId, type) {
                     gradeCell.appendChild(button);
                 } else {
                     const button = document.createElement('button');
-                    button.textContent = 'שנה ציון';
+                    button.textContent = 'Change Grade';
                     button.className = 'btn btn-primary btn-sm';
                     button.addEventListener('click', function() {
                         const gradeType = type === 'assignment' ? 'assignment' : 'exam';
@@ -140,56 +139,96 @@ async function loadGrades(courseId, assignmentExamId, type) {
                 }
                 row.appendChild(gradeCell);
 
-                // Add final grade button and display area
+                // Fetch and display the final grade
                 const finalGradeCell = document.createElement('td');
-                const finalGradeDisplay = document.createElement('h1');
-                const finalGradeButton = document.createElement('button');
+                finalGradeCell.className = 'final-grade-cell';
+                finalGradeCell.dataset.studentId = student.id; // Store studentId for later use
 
-                finalGradeButton.textContent = 'חשב ציון סופי';
-                finalGradeButton.className = 'btn btn-success btn-sm';
-                finalGradeDisplay.className = 'text-info';
-                
-                finalGradeButton.addEventListener('click', async function() {
-                    const finalGrade = await calculateFinalGrade(student.id, courseId);
-                    if (finalGrade) {
-                        finalGradeDisplay.textContent = `${finalGrade}`;
-                        alert(`Final Grade for ${student.firstName} ${student.lastName}: ${finalGrade}`);
+                // Fetch final grade for the student
+                try {
+                    const finalGradeResponse = await fetch(`http://localhost:3000/api/courses/${courseId}/students/${student.id}/final-grade`);
+                    const finalGradeData = await finalGradeResponse.json();
+
+                    if (finalGradeResponse.ok) {
+                        const finalGrade = parseFloat(finalGradeData.finalGrade);
+                        finalGradeCell.textContent = isNaN(finalGrade) ? '0.00' : finalGrade.toFixed(2);
+                    } else {
+                        finalGradeCell.textContent = '0.00';
                     }
-                });
-                
-                finalGradeCell.appendChild(finalGradeButton);
-                finalGradeCell.appendChild(finalGradeDisplay);
-                row.appendChild(finalGradeCell);
+                } catch (error) {
+                    finalGradeCell.textContent = '0.00';
+                    console.error(`Error fetching final grade for student ID ${student.id}:`, error);
+                }
 
+                row.appendChild(finalGradeCell);
                 tbody.appendChild(row);
-            });
+            }
             table.appendChild(tbody);
 
             gradesTableContainer.appendChild(table);
+
+            // Enable the "Calculate Final Grade" button
+            document.getElementById('calcFinalGradeBtn').disabled = false;
+
         } else {
-            alert('Failed to load grades: ' + gradesData.message);
+            showNotification('Failed to load grades: ' + gradesData.message, 'error');
         }
     } catch (error) {
         console.error('Error loading grades:', error);
-        alert('Error loading grades: ' + error.message);
+        showNotification('Error loading grades: ' + error.message, 'error');
     }
 }
 
-// Function to calculate the final grade for a specific student and update it in the database
-async function calculateFinalGrade(studentId, courseId) {
-    try {
-        const response = await fetch(`http://localhost:3000/api/courses/${courseId}/students/${studentId}/final-grade`);
-        const finalGradeData = await response.json();
+// Handle "Calculate Final Grade" button click
+document.getElementById('calcFinalGradeBtn').addEventListener('click', async function() {
+    const courseId = document.getElementById('classSelect').value;
+    const finalGradeCells = document.querySelectorAll('.final-grade-cell');
 
-        if (response.ok) {
-            return finalGradeData.finalGrade;
-        } else {
-            alert('Failed to calculate final grade: ' + finalGradeData.message);
-            return null;
+    try {
+        // Check if attendance exists for the course
+        const attendanceResponse = await fetch(`http://localhost:3000/api/courses/${courseId}/attendance-check`);
+        const attendanceData = await attendanceResponse.json();
+
+        if (!attendanceResponse.ok || !attendanceData.exists) {
+            showNotification('Cannot calculate final grade because you have not created at least one attendance lesson for the class.', 'error');
+            return;
         }
+
+        // Iterate over each student and calculate their final grade
+        for (const finalGradeCell of finalGradeCells) {
+            const studentId = finalGradeCell.dataset.studentId;
+
+            // Fetch final grade for the student
+            const response = await fetch(`http://localhost:3000/api/courses/${courseId}/students/${studentId}/final-grade`);
+            const finalGradeData = await response.json();
+
+            if (response.ok) {
+                const finalGrade = parseFloat(finalGradeData.finalGrade);
+                finalGradeCell.textContent = isNaN(finalGrade) ? 'N/A' : finalGrade.toFixed(2);
+            } else {
+                showNotification(`Failed to calculate final grade for student ID ${studentId}: ` + finalGradeData.message, 'error');
+            }
+        }
+
+        showNotification('Final grades calculated successfully!', 'success');
     } catch (error) {
-        console.error('Error calculating final grade:', error);
-        alert('Error calculating final grade: ' + error.message);
-        return null;
+        console.error('Error calculating final grades:', error);
+        showNotification('Error calculating final grades: ' + error.message, 'error');
     }
+});
+
+// Function to show a custom notification
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type} show`;
+
+    // Show the notification
+    notification.style.display = 'block';
+
+    // Hide the notification after 3 seconds
+    setTimeout(() => {
+        notification.className = `notification ${type}`;
+        setTimeout(() => notification.style.display = 'none', 300);
+    }, 3000);
 }
