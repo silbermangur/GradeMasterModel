@@ -61,3 +61,22 @@ exports.changeStatus = async (req, res) => {
         res.status(500).json({ message: 'Error updating attendance: ' + error.message });
     }
 }
+
+exports.removeAttendance = async (req,res) => {
+    const { courseId, date } = req.params;
+
+    try {
+        // Delete attendance records for the specified course and date
+        await Attendance.destroy({
+            where: {
+                courseId,
+                date
+            }
+        });
+
+        res.json({ message: 'Attendance removed successfully' });
+    } catch (error) {
+        console.error('Error removing attendance:', error);
+        res.status(500).json({ message: 'Error removing attendance: ' + error.message });
+    }
+}

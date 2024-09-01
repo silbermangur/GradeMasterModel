@@ -12,5 +12,6 @@ router.get('/:courseId/students',courseController.getAllStudentsOfCourse);
 router.get('/:courseId/students/:studentId/final-grade',courseController.finalGrade);
 router.get('/:courseId/report', courseController.generateReport);
 router.get('/:courseId/attendance-check', courseController.attendanceCheck);
-
+router.get('/:courseId/attendance-check-exists', courseController.checkAttendanceExists);
+router.delete('/:courseId/students/:studentId', courseController.removeStudentFromCourse);
 module.exports = router;

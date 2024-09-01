@@ -10,6 +10,7 @@ const sequelize = require('../config/database');
 const PDFDocument = require('pdfkit')
 const fs = require('fs');
 const path = require('path');
+const { ok } = require('assert');
 
 exports.createCourse = async (req, res) => {
     try {
@@ -362,3 +363,70 @@ exports.attendanceCheck = async (req,res) => {
         res.status(500).json({ message: 'Error checking attendance: ' + error.message });
     }
 };
+
+exports.checkAttendanceExists = async (req,res) => {
+    const { courseId } = req.params;
+    try {
+        const attendanceCount = await Attendance.count({ where: { courseId } });
+        res.json({ exists: attendanceCount > 0 });
+    } catch (error) {
+        console.error('Error checking attendance:', error);
+        res.status(500).json({ message: 'Error checking attendance: ' + error.message });
+    }
+}
+exports.removeStudentFromCourse = async (req,res) => {
+    // In your courseController.js or similar file
+    const { courseId, studentId } = req.params;
+
+    try {
+        // Start a transaction to ensure all deletions occur together
+        const transaction = await sequelize.transaction();
+
+        // Delete assignment submissions for the student in this course
+        await AssignmentSubmission.destroy({
+            where: {  studentId },
+            transaction
+        });
+
+        // Delete exam submissions for the student in this course
+        await ExamSubmission.destroy({
+            where: { studentId },
+            transaction
+        });
+
+        // Delete attendance records for the student in this course
+        await Attendance.destroy({
+            where: { courseId, studentId },
+            transaction
+        });
+
+        // Delete the enrollment record for the student in this course
+        const enrollment = await Enrollment.findOne({ where: { courseId, studentId }, transaction });
+
+        if (!enrollment) {
+            await transaction.rollback();
+            return res.status(404).json({ message: 'Student is not enrolled in this course' });
+        }
+
+        await enrollment.destroy({ transaction });
+
+        // Check if the student is enrolled in any other courses
+        const remainingEnrollments = await Enrollment.count({ where: { studentId }, transaction });
+
+        if (remainingEnrollments === 0) {
+            // If no remaining enrollments, delete the student
+            await Student.destroy({ where: { id: studentId }, transaction });
+        }
+
+        // Commit the transaction to finalize all deletions
+        await transaction.commit();
+
+        res.json({ message: 'Student and all associated records removed from course successfully' });
+    } catch (error) {
+        console.error('Error removing student from course:', error);
+        res.status(500).json({ message: 'Error removing student from course: ' + error.message });
+    }
+};
+
+
+

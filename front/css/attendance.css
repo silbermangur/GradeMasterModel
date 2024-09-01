@@ -1,59 +1,71 @@
-/* attendance.css */
+/* General styles */
 body {
-    background: linear-gradient(to right, #6a11cb, #2575fc);
-    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
     margin: 0;
-    font-family: 'Arial', sans-serif;
-    padding-top: 60px;
-}
-
-.navbar {
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    top: 0;
-    z-index: 1000;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
 }
 
 .container {
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
-    max-width: 800px;
-    margin: auto;
-    margin-top: 20px;
+    width: 80%;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Attendance table styles */
+.table {
     width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
 }
 
-h2 {
-    color: #343a40;
-    font-weight: bold;
-    margin-bottom: 30px;
-    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+.table th, .table td {
+    padding: 10px;
     text-align: center;
+    border: 1px solid #ddd;
 }
 
-.form-group label {
-    font-weight: bold;
-    color: #495057;
-    margin-bottom: 10px;
+.table th {
+    background-color: #007bff;
+    color: white;
 }
 
-.form-control {
-    border-radius: 10px;
-    border: 1px solid #ced4da;
-    margin-bottom: 15px;
+.table td {
+    background-color: #f9f9f9;
+}
+
+.attendance-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.attendance-wrapper select {
+    width: auto;
+    margin-right: 10px;
+}
+
+/* Button styles */
+.btn {
+    padding: 5px 10px;
+    font-size: 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: capitalize;
 }
 
 .btn-primary {
     background-color: #007bff;
     border-color: #007bff;
-    padding: 15px;
-    font-size: 18px;
-    border-radius: 10px;
-    transition: all 0.3s ease;
+    color: white;
 }
 
 .btn-primary:hover {
@@ -61,33 +73,40 @@ h2 {
     border-color: #004085;
 }
 
-.btn-block {
-    width: 100%;
-    text-align: center;
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+    cursor: pointer;
 }
 
-#attendanceTableContainer {
-    overflow-x: auto;
-    white-space: nowrap;
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
 }
 
-#attendanceTableContainer table {
-    width: 100%;
-    border-collapse: collapse;
+/* Notification styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #444;
+    color: white;
+    border-radius: 5px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 1000;
 }
 
-#attendanceTableContainer th, 
-#attendanceTableContainer td {
-    padding: 12px 15px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
+.notification.show {
+    opacity: 1;
 }
 
-#attendanceTableContainer th {
-    background-color: #f8f9fa;
-    font-weight: bold;
+.notification.success {
+    background-color: #4caf50;
 }
 
-#attendanceTableContainer tr:hover {
-    background-color: #f1f1f1;
+.notification.error {
+    background-color: #f44336;
 }
