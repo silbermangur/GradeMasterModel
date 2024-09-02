@@ -1,9 +1,7 @@
-
-// Create the amout of assignment as needed
+// Create the amount of assignments as needed
 document.getElementById('generateAssignmentsBtn').addEventListener('click', function() {
     const numAssignments = document.getElementById('numAssignments').value;
     const assignmentsContainer = document.getElementById('assignmentsContainer');
-
 
     // Clear any existing assignment fields
     assignmentsContainer.innerHTML = '';
@@ -29,20 +27,17 @@ document.getElementById('generateAssignmentsBtn').addEventListener('click', func
     }
 });
 
-
-document.getElementById("classform").addEventListener('submit', async(e)=> {
+document.getElementById("classform").addEventListener('submit', async(e) => {
     e.preventDefault();
 
-
-
-    // get Exam data
+    // Get Exam data
     const examName = document.getElementById("examName").value;
     const examDescription = document.getElementById("examDescription").value;
     const examDate = document.getElementById("examDate").value;
     const examWeight = parseFloat(document.getElementById("examWeight").value);
 
-    // create Exam Object
-    const exam = {examName, examDescription, examDate, examWeight}
+    // Create Exam Object
+    const exam = { examName, examDescription, examDate, examWeight };
 
     // Get Assignments data
     const numAssignments = document.getElementById('numAssignments').value;
@@ -61,7 +56,7 @@ document.getElementById("classform").addEventListener('submit', async(e)=> {
         assignments.push({ assignmentName, assignmentDescription, assignmentDate, assignmentWeight });
     }
 
-    const CourseId = localStorage.getItem('courseId')
+    const CourseId = localStorage.getItem('courseId');
 
     // Create course object with nested exam and assignments
     const Data = {
@@ -82,16 +77,32 @@ document.getElementById("classform").addEventListener('submit', async(e)=> {
         const result = await response.json();
         if (response.ok) {
             // Store the teacherId in local storage
-            localStorage.removeItem('courseId')
+            localStorage.removeItem('courseId');
              
-            // You can redirect the user to the dashboard or another page after login
+            // Redirect the user to the dashboard or another page after the operation
             window.location.href = 'Home.html';
 
-            alert('exam, and assignments created successfully!');
+            showNotification('Exam and assignments created successfully!', 'success');
         } else {
-            alert(result.message || 'Failed to create course.');
+            showNotification(result.message || 'Failed to create course.', 'error');
         }
     } catch (error) {
-        alert('Error: ' + error.message);
+        showNotification('Error: ' + error.message, 'error');
     }
-})
+});
+
+// Function to show a custom notification
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type} show`;
+
+    // Show the notification
+    notification.style.display = 'block';
+
+    // Hide the notification after 3 seconds
+    setTimeout(() => {
+        notification.className = `notification ${type}`;
+        setTimeout(() => notification.style.display = 'none', 300);
+    }, 3000);
+}

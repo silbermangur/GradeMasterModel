@@ -12,8 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${course.courseName}</td>
-                    <td>${course.courseCode}</td>
-                    <td>${course.credits}</td>
                     <td>
                         <button class="btn btn-sm btn-danger" data-course-id="${course.id}">Delete</button>
                     </td>
