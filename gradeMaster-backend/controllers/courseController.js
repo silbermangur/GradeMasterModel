@@ -422,6 +422,54 @@ exports.removeStudentFromCourse = async (req,res) => {
         res.status(500).json({ message: 'Error removing student from course: ' + error.message });
     }
 };
+exports.deleteCourse = async (req,res) => {
+    const { courseId } = req.params;
 
+    try {
+        // Start a transaction to ensure all deletions occur together
+        const transaction = await sequelize.transaction();
+
+        // Delete assignments associated with the course
+        await Assignment.destroy({
+            where: { courseId },
+            transaction
+        });
+
+        // Delete exams associated with the course
+        await Exam.destroy({
+            where: { courseId },
+            transaction
+        });
+
+        // Delete attendance records associated with the course
+        await Attendance.destroy({
+            where: { courseId },
+            transaction
+        });
+
+        // Delete enrollments associated with the course
+        await Enrollment.destroy({
+            where: { courseId },
+            transaction
+        });
+
+        // Delete the course itself
+        const course = await Course.findByPk(courseId, { transaction });
+        if (!course) {
+            await transaction.rollback();
+            return res.status(404).json({ message: 'Course not found' });
+        }
+
+        await course.destroy({ transaction });
+
+        // Commit the transaction to finalize all deletions
+        await transaction.commit();
+
+        res.json({ message: 'Course and all associated data deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting course:', error);
+        res.status(500).json({ message: 'Error deleting course: ' + error.message });
+    }
+}
 
 
