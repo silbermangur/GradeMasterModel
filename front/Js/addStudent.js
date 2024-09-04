@@ -26,15 +26,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const result = await response.json();
             if (response.ok) {
-                localStorage.setItem('studentId',result.id)
-                alert('Student added successfully!');
-                window.location.href = 'addStudentToCourse.html'; // Redirect back to the student management page
+                localStorage.setItem('studentId', result.id);
+                showNotification('Student added successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'addStudentToCourse.html'; // Redirect back to the student management page
+                }, 2000);
             } else {
-                alert('Failed to add student: ' + result.message);
+                showNotification('Failed to add student: ' + result.message, 'error');
             }
         } catch (error) {
             console.error('Error adding student:', error);
-            alert('Error adding student: ' + error.message);
+            showNotification('Error adding student: ' + error.message, 'error');
         }
     });
 });
+
+// Function to show a custom notification
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type} show`;
+
+    // Show the notification
+    notification.style.display = 'block';
+
+    // Hide the notification after 3 seconds
+    setTimeout(() => {
+        notification.className = `notification ${type}`;
+        setTimeout(() => notification.style.display = 'none', 300);
+    }, 3000);
+}

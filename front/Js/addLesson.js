@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const teacherId = localStorage.getItem('teacherId');
 
     if (!teacherId) {
-        alert('Teacher ID not found in local storage.');
+        showNotification('Teacher ID not found in local storage.', 'error');
         return;
     }
 
@@ -25,11 +25,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                 classSelect.value = courses[0].id;
             }
         } else {
-            alert('Failed to load courses: ' + courses.message);
+            showNotification('Failed to load courses: ' + courses.message, 'error');
         }
     } catch (error) {
         console.error('Error loading courses:', error);
-        alert('Error loading courses: ' + error.message);
+        showNotification('Error loading courses: ' + error.message, 'error');
     }
 
     // Handle form submission to create a new lesson and attendance records
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         const formattedDate = new Date(lessonDate).toISOString().split('T')[0];
 
         if (!lessonDate || !courseId) {
-            alert('Please select a date and course.');
+            showNotification('Please select a date and course.', 'error');
             return;
         }
 
@@ -73,15 +73,32 @@ document.addEventListener('DOMContentLoaded', async function() {
                         })
                     });
                 }
+                showNotification('Attendance records created successfully!', 'success');
             } else {
-                alert('Failed to fetch students: ' + students.message);
+                showNotification('Failed to fetch students: ' + students.message, 'error');
             }
         } catch (error) {
             console.error('Error fetching students:', error);
-            alert('Error fetching students: ' + error.message);
+            showNotification('Error fetching students: ' + error.message, 'error');
         }
 
         // Redirect back to the attendance page
         window.location.href = 'attendance.html';
     });
 });
+
+// Function to show a custom notification
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type} show`;
+
+    // Show the notification
+    notification.style.display = 'block';
+
+    // Hide the notification after 3 seconds
+    setTimeout(() => {
+        notification.className = `notification ${type}`;
+        setTimeout(() => notification.style.display = 'none', 300);
+    }, 3000);
+}

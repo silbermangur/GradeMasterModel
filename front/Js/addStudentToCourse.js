@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const studentId = localStorage.getItem('studentId');
 
     if (!teacherId || !studentId) {
-        alert('Teacher ID or Student ID not found in local storage.');
+        showNotification('Teacher ID or Student ID not found in local storage.', 'error');
         return;
     }
 
@@ -26,11 +26,11 @@ document.addEventListener('DOMContentLoaded', async function() {
                 courseList.appendChild(courseCheckbox);
             });
         } else {
-            alert('Failed to load courses: ' + courses.message);
+            showNotification('Failed to load courses: ' + courses.message, 'error');
         }
     } catch (error) {
         console.error('Error loading courses:', error);
-        alert('Error loading courses: ' + error.message);
+        showNotification('Error loading courses: ' + error.message, 'error');
     }
 
     // Handle form submission
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
 
         if (selectedCourses.length === 0) {
-            alert('Please select at least one course.');
+            showNotification('Please select at least one course.', 'error');
             return;
         }
 
@@ -59,16 +59,32 @@ document.addEventListener('DOMContentLoaded', async function() {
                         courseId,
                         enrollmentDate: new Date().toISOString().split('T')[0],  // Use the current date
                         finalGrade: 0.0, 
-                        
                     })
                 });
             }
 
-            alert('Student successfully enrollment to courses!');
-            window.location.href = 'students.html'; // Redirect back to the student management page
+            showNotification('Student successfully enrolled in courses!', 'success');
+            setTimeout(() => {
+                window.location.href = 'students.html'; // Redirect back to the student management page
+            }, 2000);
         } catch (error) {
             console.error('Error assigning student to courses:', error);
-            alert('Error assigning student to courses: ' + error.message);
+            showNotification('Error assigning student to courses: ' + error.message, 'error');
         }
     });
 });
+
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type} show`;
+
+    // Show the notification
+    notification.style.display = 'block';
+
+    // Hide the notification after 3 seconds
+    setTimeout(() => {
+        notification.className = `notification ${type}`;
+        setTimeout(() => notification.style.display = 'none', 300);
+    }, 3000);
+}

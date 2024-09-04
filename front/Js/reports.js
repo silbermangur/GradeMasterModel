@@ -69,3 +69,18 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     });
 });
+
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type} show`;
+
+    // Show the notification
+    notification.style.display = 'block';
+
+    // Hide the notification after 3 seconds
+    setTimeout(() => {
+        notification.className = `notification ${type}`;
+        setTimeout(() => notification.style.display = 'none', 300);
+    }, 3000);
+}

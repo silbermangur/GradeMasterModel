@@ -37,14 +37,30 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             if (response.ok) {
-                alert('Grade saved successfully!');
+                showNotification('Grade saved successfully!','success');
                 window.location.href = 'grades.html';
             } else {
-                alert('Failed to save grade: ' + (await response.json()).message);
+                showNotification('Failed to save grade: ' + (await response.json()).message, 'error');
             }
         } catch (error) {
             console.error('Error saving grade:', error);
-            alert('Error saving grade: ' + error.message);
+            showNotification('Error saving grade: ' + error.message, 'error');
         }
     });
 });
+
+// Function to show a custom notification
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = `notification ${type} show`;
+
+    // Show the notification
+    notification.style.display = 'block';
+
+    // Hide the notification after 3 seconds
+    setTimeout(() => {
+        notification.className = `notification ${type}`;
+        setTimeout(() => notification.style.display = 'none', 300);
+    }, 3000);
+}

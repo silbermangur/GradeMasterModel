@@ -87,7 +87,7 @@ body, html {
 }
 
 .logout-button {
-    background-color: #0072ff;
+    background-color: #df0e3b;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -98,7 +98,7 @@ body, html {
 }
 
 .logout-button:hover {
-    background-color: #005bb5;
+    background-color: #000000;
     transform: translateY(-2px);
 }
 
